@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.ThriftAdapters;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+namespace Worldpay.Within.Sample.Commands
 {
 
     /// <summary>

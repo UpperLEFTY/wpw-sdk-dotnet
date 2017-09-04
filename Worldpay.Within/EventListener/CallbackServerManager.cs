@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Thrift.Server;
 using Thrift.Transport;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.Rpc;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.Rpc;
+using Worldpay.Within.ThriftAdapters;
 
-namespace Worldpay.Innovation.WPWithin.EventListener
+namespace Worldpay.Within.EventListener
 {
     /// <summary>
     ///     This is the callback server manager that manages a Thrift server to receive callbacks from the WPWithin SDK.
@@ -37,7 +37,7 @@ namespace Worldpay.Innovation.WPWithin.EventListener
             _config = config;
         }
 
-        public void beginServiceDelivery(int serviceId, Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
+        public void beginServiceDelivery(int serviceId, Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
             int unitsToSupply)
         {
             Log.DebugFormat(
@@ -47,7 +47,7 @@ namespace Worldpay.Innovation.WPWithin.EventListener
                 unitsToSupply);
         }
 
-        public void endServiceDelivery(int serviceId, Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
+        public void endServiceDelivery(int serviceId, Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
             int unitsReceived)
         {
             Log.DebugFormat("EndServiceDelivery invoked (serviceId={0}, serviceDeliveryToken={1}, unitsToSupply={2})",

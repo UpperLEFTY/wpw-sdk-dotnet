@@ -1,6 +1,6 @@
-﻿using ThriftPaymentResponse = Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse;
+﻿using ThriftPaymentResponse = Worldpay.Within.Rpc.Types.PaymentResponse;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class PaymentResponseAdapter
     {

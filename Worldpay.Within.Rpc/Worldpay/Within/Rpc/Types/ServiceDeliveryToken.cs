@@ -15,22 +15,26 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class ServiceDetails : TBase
+  public partial class ServiceDeliveryToken : TBase
   {
 
-    public int? ServiceId { get; set; }
+    public string Key { get; set; }
 
-    public string ServiceDescription { get; set; }
+    public string Issued { get; set; }
 
-    public string ServiceName { get; set; }
+    public string Expiry { get; set; }
 
-    public ServiceDetails() {
+    public bool? RefundOnExpiry { get; set; }
+
+    public byte[] Signature { get; set; }
+
+    public ServiceDeliveryToken() {
     }
 
     public void Read (TProtocol iprot)
@@ -49,22 +53,36 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.I32) {
-                ServiceId = iprot.ReadI32();
+              if (field.Type == TType.String) {
+                Key = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 2:
               if (field.Type == TType.String) {
-                ServiceDescription = iprot.ReadString();
+                Issued = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 3:
               if (field.Type == TType.String) {
-                ServiceName = iprot.ReadString();
+                Expiry = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 4:
+              if (field.Type == TType.Bool) {
+                RefundOnExpiry = iprot.ReadBool();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 5:
+              if (field.Type == TType.String) {
+                Signature = iprot.ReadBinary();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -87,31 +105,47 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("ServiceDetails");
+        TStruct struc = new TStruct("ServiceDeliveryToken");
         oprot.WriteStructBegin(struc);
         TField field = new TField();
-        if (ServiceId != null) {
-          field.Name = "serviceId";
-          field.Type = TType.I32;
+        if (Key != null) {
+          field.Name = "key";
+          field.Type = TType.String;
           field.ID = 1;
           oprot.WriteFieldBegin(field);
-          oprot.WriteI32(ServiceId.Value);
+          oprot.WriteString(Key);
           oprot.WriteFieldEnd();
         }
-        if (ServiceDescription != null) {
-          field.Name = "serviceDescription";
+        if (Issued != null) {
+          field.Name = "issued";
           field.Type = TType.String;
           field.ID = 2;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ServiceDescription);
+          oprot.WriteString(Issued);
           oprot.WriteFieldEnd();
         }
-        if (ServiceName != null) {
-          field.Name = "serviceName";
+        if (Expiry != null) {
+          field.Name = "expiry";
           field.Type = TType.String;
           field.ID = 3;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ServiceName);
+          oprot.WriteString(Expiry);
+          oprot.WriteFieldEnd();
+        }
+        if (RefundOnExpiry != null) {
+          field.Name = "refundOnExpiry";
+          field.Type = TType.Bool;
+          field.ID = 4;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteBool(RefundOnExpiry.Value);
+          oprot.WriteFieldEnd();
+        }
+        if (Signature != null) {
+          field.Name = "signature";
+          field.Type = TType.String;
+          field.ID = 5;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteBinary(Signature);
           oprot.WriteFieldEnd();
         }
         oprot.WriteFieldStop();
@@ -124,25 +158,37 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("ServiceDetails(");
+      StringBuilder __sb = new StringBuilder("ServiceDeliveryToken(");
       bool __first = true;
-      if (ServiceId != null) {
+      if (Key != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceId: ");
-        __sb.Append(ServiceId);
+        __sb.Append("Key: ");
+        __sb.Append(Key);
       }
-      if (ServiceDescription != null) {
+      if (Issued != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceDescription: ");
-        __sb.Append(ServiceDescription);
+        __sb.Append("Issued: ");
+        __sb.Append(Issued);
       }
-      if (ServiceName != null) {
+      if (Expiry != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceName: ");
-        __sb.Append(ServiceName);
+        __sb.Append("Expiry: ");
+        __sb.Append(Expiry);
+      }
+      if (RefundOnExpiry != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("RefundOnExpiry: ");
+        __sb.Append(RefundOnExpiry);
+      }
+      if (Signature != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("Signature: ");
+        __sb.Append(Signature);
       }
       __sb.Append(")");
       return __sb.ToString();

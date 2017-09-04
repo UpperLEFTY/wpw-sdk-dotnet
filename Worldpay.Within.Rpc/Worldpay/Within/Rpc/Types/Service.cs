@@ -15,24 +15,24 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class PaymentResponse : TBase
+  public partial class Service : TBase
   {
 
-    public string ServerId { get; set; }
+    public int? Id { get; set; }
 
-    public string ClientId { get; set; }
+    public string Name { get; set; }
 
-    public int? TotalPaid { get; set; }
+    public string Description { get; set; }
 
-    public ServiceDeliveryToken ServiceDeliveryToken { get; set; }
+    public Dictionary<int, Price> Prices { get; set; }
 
-    public PaymentResponse() {
+    public Service() {
     }
 
     public void Read (TProtocol iprot)
@@ -51,30 +51,42 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.String) {
-                ServerId = iprot.ReadString();
+              if (field.Type == TType.I32) {
+                Id = iprot.ReadI32();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 2:
               if (field.Type == TType.String) {
-                ClientId = iprot.ReadString();
+                Name = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 3:
-              if (field.Type == TType.I32) {
-                TotalPaid = iprot.ReadI32();
+              if (field.Type == TType.String) {
+                Description = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 4:
-              if (field.Type == TType.Struct) {
-                ServiceDeliveryToken = new ServiceDeliveryToken();
-                ServiceDeliveryToken.Read(iprot);
+              if (field.Type == TType.Map) {
+                {
+                  Prices = new Dictionary<int, Price>();
+                  TMap _map0 = iprot.ReadMapBegin();
+                  for( int _i1 = 0; _i1 < _map0.Count; ++_i1)
+                  {
+                    int _key2;
+                    Price _val3;
+                    _key2 = iprot.ReadI32();
+                    _val3 = new Price();
+                    _val3.Read(iprot);
+                    Prices[_key2] = _val3;
+                  }
+                  iprot.ReadMapEnd();
+                }
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -97,39 +109,47 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("PaymentResponse");
+        TStruct struc = new TStruct("Service");
         oprot.WriteStructBegin(struc);
         TField field = new TField();
-        if (ServerId != null) {
-          field.Name = "serverId";
-          field.Type = TType.String;
+        if (Id != null) {
+          field.Name = "id";
+          field.Type = TType.I32;
           field.ID = 1;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ServerId);
+          oprot.WriteI32(Id.Value);
           oprot.WriteFieldEnd();
         }
-        if (ClientId != null) {
-          field.Name = "clientId";
+        if (Name != null) {
+          field.Name = "name";
           field.Type = TType.String;
           field.ID = 2;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ClientId);
+          oprot.WriteString(Name);
           oprot.WriteFieldEnd();
         }
-        if (TotalPaid != null) {
-          field.Name = "totalPaid";
-          field.Type = TType.I32;
+        if (Description != null) {
+          field.Name = "description";
+          field.Type = TType.String;
           field.ID = 3;
           oprot.WriteFieldBegin(field);
-          oprot.WriteI32(TotalPaid.Value);
+          oprot.WriteString(Description);
           oprot.WriteFieldEnd();
         }
-        if (ServiceDeliveryToken != null) {
-          field.Name = "serviceDeliveryToken";
-          field.Type = TType.Struct;
+        if (Prices != null) {
+          field.Name = "prices";
+          field.Type = TType.Map;
           field.ID = 4;
           oprot.WriteFieldBegin(field);
-          ServiceDeliveryToken.Write(oprot);
+          {
+            oprot.WriteMapBegin(new TMap(TType.I32, TType.Struct, Prices.Count));
+            foreach (int _iter4 in Prices.Keys)
+            {
+              oprot.WriteI32(_iter4);
+              Prices[_iter4].Write(oprot);
+            }
+            oprot.WriteMapEnd();
+          }
           oprot.WriteFieldEnd();
         }
         oprot.WriteFieldStop();
@@ -142,31 +162,31 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("PaymentResponse(");
+      StringBuilder __sb = new StringBuilder("Service(");
       bool __first = true;
-      if (ServerId != null) {
+      if (Id != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServerId: ");
-        __sb.Append(ServerId);
+        __sb.Append("Id: ");
+        __sb.Append(Id);
       }
-      if (ClientId != null) {
+      if (Name != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ClientId: ");
-        __sb.Append(ClientId);
+        __sb.Append("Name: ");
+        __sb.Append(Name);
       }
-      if (TotalPaid != null) {
+      if (Description != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("TotalPaid: ");
-        __sb.Append(TotalPaid);
+        __sb.Append("Description: ");
+        __sb.Append(Description);
       }
-      if (ServiceDeliveryToken != null) {
+      if (Prices != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceDeliveryToken: ");
-        __sb.Append(ServiceDeliveryToken== null ? "<null>" : ServiceDeliveryToken.ToString());
+        __sb.Append("Prices: ");
+        __sb.Append(Prices);
       }
       __sb.Append(")");
       return __sb.ToString();

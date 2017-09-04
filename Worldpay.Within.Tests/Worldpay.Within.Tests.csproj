@@ -75,7 +75,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Worldpay.Within\Worldpay.Within.csproj">
       <Project>{89258cbd-6ca6-4664-9487-c0123caad111}</Project>
-      <Name>Worldpay.Innovation.WPWithin</Name>
+      <Name>Worldpay.Within</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

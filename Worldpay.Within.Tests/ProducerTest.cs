@@ -2,9 +2,8 @@
 using System.Threading;
 using Common.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Worldpay.Innovation.WPWithin;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.ThriftAdapters;
 
 namespace Worldpay.Within.Tests
 {

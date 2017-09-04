@@ -4,13 +4,13 @@ using Common.Logging;
 using Thrift;
 using Thrift.Protocol;
 using Thrift.Transport;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.EventListener;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
-using ThriftWPWithinService = Worldpay.Innovation.WPWithin.Rpc.WPWithin;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.EventListener;
+using Worldpay.Within.ThriftAdapters;
+using ThriftWPWithinService = Worldpay.Within.Rpc.WPWithin;
 
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     /// <summary>
     ///     The main Worldpay Within service endpoint.

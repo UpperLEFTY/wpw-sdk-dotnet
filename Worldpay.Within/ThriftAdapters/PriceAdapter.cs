@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Thrift.Collections;
-using ThriftPrice = Worldpay.Innovation.WPWithin.Rpc.Types.Price;
+using Worldpay.Within;
+using ThriftPrice = Worldpay.Within.Rpc.Types.Price;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class PriceAdapter
     {

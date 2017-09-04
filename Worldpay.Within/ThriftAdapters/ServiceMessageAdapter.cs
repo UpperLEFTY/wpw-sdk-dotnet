@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Thrift.Collections;
-using ThriftServiceMessage = Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage;
+using ThriftServiceMessage = Worldpay.Within.Rpc.Types.ServiceMessage;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class ServiceMessageAdapter
     {
-        public static IEnumerable<ServiceMessage> Create(THashSet<Rpc.Types.ServiceMessage> deviceDiscovery)
+        public static IEnumerable<ServiceMessage> Create(THashSet<Within.Rpc.Types.ServiceMessage> deviceDiscovery)
         {
             return deviceDiscovery.Select(Create);
         }

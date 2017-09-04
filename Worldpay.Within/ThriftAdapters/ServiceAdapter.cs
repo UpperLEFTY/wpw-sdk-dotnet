@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ThriftService = Worldpay.Innovation.WPWithin.Rpc.Types.Service;
+using ThriftService = Worldpay.Within.Rpc.Types.Service;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class ServiceAdapter
     {
@@ -19,11 +19,10 @@ namespace Worldpay.Innovation.WPWithin.ThriftAdapters
 
         public static Service Create(ThriftService service)
         {
-            return new Service
+            return new Service(service.Id)
             {
                 Description = service.Description,
                 Name = service.Name,
-                Id = service.Id,
                 Prices = PriceAdapter.Create(service.Prices)
             };
         }

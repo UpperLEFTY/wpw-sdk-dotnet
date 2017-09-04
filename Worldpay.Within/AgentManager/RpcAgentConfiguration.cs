@@ -4,13 +4,13 @@ using System.IO;
 using Common.Logging;
 using Thrift.Protocol;
 using Thrift.Transport;
-using Worldpay.Innovation.WPWithin.Utils;
+using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin.AgentManager
+namespace Worldpay.Within.AgentManager
 {
     /// <summary>
     ///     Manages the configuration of an Thrift RPC Agent (passed to <code>rpc-client.exe</code>) or the
-    ///     <see cref="WPWithinService" /> instance that will connect to it.
+    ///     <see cref="RpcAgentManager.StartThriftRpcAgentProcess" /> instance that will connect to it.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -22,10 +22,10 @@ namespace Worldpay.Innovation.WPWithin.AgentManager
     ///         Parameters have hard-coded defaults in this class and these defaults can be overridden in application settings
     ///         (typically in app.config or web.config files), or
     ///         set directly on an instance of this class before passing to
-    ///         <see cref="RpcAgentManager.StartThriftRpcAgentProcess()" />.
+    ///         <see cref="RpcAgentManager" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="RpcAgentManager" />
+    /// <seealso cref="WPWithinService" />
     public class RpcAgentConfiguration
     {
         private static readonly ILog Log = LogManager.GetLogger<RpcAgentConfiguration>();

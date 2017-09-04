@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Worldpay.Innovation.WPWithin.AgentManager;
+using Worldpay.Within.AgentManager;
 
 namespace Worldpay.Within.Tests
 {

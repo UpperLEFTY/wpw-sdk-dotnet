@@ -1,6 +1,6 @@
-﻿using ThriftPricePerUnit = Worldpay.Innovation.WPWithin.Rpc.Types.PricePerUnit;
+﻿using ThriftPricePerUnit = Worldpay.Within.Rpc.Types.PricePerUnit;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     /// <summary>
     ///     Thrift type adapter for <see cref="PricePerUnit" />.

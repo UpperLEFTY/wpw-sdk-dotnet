@@ -15,15 +15,15 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc
+namespace Worldpay.Within.Rpc
 {
   public partial class WPWithinCallback {
     /// <summary>
     /// WorldpayWithin Callback Service - RPC clients implement this service to enable callbacks from WorldpayWithin Service
     /// </summary>
     public interface ISync {
-      void beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
-      void endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      void beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      void endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
     }
 
     /// <summary>
@@ -31,11 +31,11 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     /// </summary>
     public interface Iface : ISync {
       #if SILVERLIGHT
-      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
       void End_beginServiceDelivery(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
       void End_endServiceDelivery(IAsyncResult asyncResult);
       #endif
     }
@@ -101,7 +101,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
         return send_beginServiceDelivery(callback, state, serviceID, serviceDeliveryToken, unitsToSupply);
       }
@@ -114,7 +114,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public void beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public void beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
         #if !SILVERLIGHT
         send_beginServiceDelivery(serviceID, serviceDeliveryToken, unitsToSupply);
@@ -127,9 +127,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #else
-      public void send_beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public void send_beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("beginServiceDelivery", TMessageType.Call, seqid_));
@@ -165,7 +165,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       {
         return send_endServiceDelivery(callback, state, serviceID, serviceDeliveryToken, unitsReceived);
       }
@@ -178,7 +178,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public void endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public void endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       {
         #if !SILVERLIGHT
         send_endServiceDelivery(serviceID, serviceDeliveryToken, unitsReceived);
@@ -191,9 +191,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public IAsyncResult send_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       #else
-      public void send_endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public void send_endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("endServiceDelivery", TMessageType.Call, seqid_));
@@ -278,7 +278,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.beginServiceDelivery(args.ServiceID.Value, args.ServiceDeliveryToken, args.UnitsToSupply.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -313,7 +313,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.endServiceDelivery(args.ServiceID.Value, args.ServiceDeliveryToken, args.UnitsReceived.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -347,7 +347,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       public int? ServiceID { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
 
       public int? UnitsToSupply { get; set; }
 
@@ -378,7 +378,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 2:
                 if (field.Type == TType.Struct) {
-                  ServiceDeliveryToken = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  ServiceDeliveryToken = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   ServiceDeliveryToken.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -479,7 +479,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class beginServiceDelivery_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public beginServiceDelivery_result() {
       }
@@ -501,7 +501,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -570,7 +570,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       public int? ServiceID { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
 
       public int? UnitsReceived { get; set; }
 
@@ -601,7 +601,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 2:
                 if (field.Type == TType.Struct) {
-                  ServiceDeliveryToken = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  ServiceDeliveryToken = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   ServiceDeliveryToken.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -702,7 +702,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class endServiceDelivery_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public endServiceDelivery_result() {
       }
@@ -724,7 +724,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);

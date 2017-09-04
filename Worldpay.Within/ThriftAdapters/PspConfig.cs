@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     /// <summary>
     /// TODO: Fix KeyNotFoundExceptions by testing value before returning.

@@ -1,6 +1,6 @@
-﻿using Worldpay.Innovation.WPWithin.Utils;
+﻿using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     /// <summary>
     /// Represents a Hosted Card Emulator, a payment instrument, such as a credit card, than can be used to purchase services from a producer.

@@ -1,6 +1,6 @@
-﻿using ThriftTotalPriceResponse = Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse;
+﻿using ThriftTotalPriceResponse = Worldpay.Within.Rpc.Types.TotalPriceResponse;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class TotalPriceResponseAdapter
     {
