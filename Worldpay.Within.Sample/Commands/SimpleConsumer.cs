@@ -3,7 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+
 using Worldpay.Within.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+
 
 namespace Worldpay.Within.Sample.Commands
 {
@@ -15,11 +18,14 @@ namespace Worldpay.Within.Sample.Commands
     {
         private readonly TextWriter _error;
         private readonly TextWriter _output;
+        private RpcAgentManager _rpcManager;
+        private WPWithinService _service;
 
-        public SimpleConsumer(TextWriter output, TextWriter error)
+        public SimpleConsumer(TextWriter output, TextWriter error, RpcAgentManager rpcAgent)
         {
             _output = output;
             _error = error;
+            _rpcManager = rpcAgent;
         }
 
         /// <summary>
@@ -30,6 +36,7 @@ namespace Worldpay.Within.Sample.Commands
         /// <returns>Indication of the success of the operation.</returns>
         public CommandResult MakePurchase(WPWithinService service)
         {
+            _service = service;
             service.SetupDevice("my-device", "an example consumer device");
 
             ServiceMessage firstDevice = DiscoverDevices(service)?.FirstOrDefault();
@@ -261,6 +268,26 @@ namespace Worldpay.Within.Sample.Commands
             Thread.Sleep(10000);
             _output.WriteLine("Calling endServiceDelivery()");
             service.EndServiceDelivery(serviceId, token, unitsToSupply);
+        }
+
+        /// <summary>
+        /// Stops the RPC Agent through calling thrift function CloseRPCAgent(),
+        /// which simply exits the agent.
+        /// </summary>
+        internal void StopRpcClient()
+        {
+            if (_rpcManager == null)
+            {
+                _error.WriteLine("Thift RPC Agent not active.  Start it before trying to stop it.");
+                return;
+            }
+            try
+            {
+                _service?.CloseRPCAgent();
+            } catch { }
+            // additionaly try to stop the agent if it's still alive
+            _rpcManager.StopThriftRpcAgentProcess();
+            _rpcManager = null;
         }
     }
 }

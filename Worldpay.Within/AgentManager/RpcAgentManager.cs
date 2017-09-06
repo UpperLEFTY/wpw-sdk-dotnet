@@ -137,15 +137,31 @@ namespace Worldpay.Within.AgentManager
 
             if (_thriftRpcProcess.HasExited)
             {
-                Log.Warn("Ignoring call to stop Thrift RPC agent as the process has already exited");
+                Log.Debug("Ignoring call to stop Thrift RPC agent as the process has already exited");
             }
             else
             {
+                try
+                {
+                    _thriftRpcProcess.CloseMainWindow();
+                }
+                catch (WPWithinException wpwe)
+                {
+                    Log.Debug("Expected WPWithin exception from closing RPC agent: " + wpwe.Message);
+                }
+                catch(Exception e)
+                {
+                    Log.Debug("Expected exception from closing RPC agent: " + e.Message);
+                }
                 // BUG Commented out Ctrl-C style kill code as it won't work if in a Console app, will re-enable once I've fixed it properly
                 //                if (!SentCtrlCToProcess(_thriftRpcProcess))
                 //                {
-                Log.Info("Unable to gracefully stop Thift RPC Agent, issuing kill instead");
-                _thriftRpcProcess.Kill();
+                
+                if (!_thriftRpcProcess.HasExited)
+                {
+                    Log.Info("Unable to gracefully stop Thift RPC Agent, issuing kill instead");
+                    _thriftRpcProcess.Kill();
+                }
                 //                }
             }
         }

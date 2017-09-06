@@ -37,6 +37,7 @@ namespace Worldpay.Within.Rpc
       Worldpay.Within.Rpc.Types.PaymentResponse makePayment(Worldpay.Within.Rpc.Types.TotalPriceResponse request);
       Worldpay.Within.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
       Worldpay.Within.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+	  void CloseRPCAgent();
     }
 
     /// <summary>
@@ -102,6 +103,10 @@ namespace Worldpay.Within.Rpc
       #if SILVERLIGHT
       IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
       Worldpay.Within.Rpc.Types.ServiceDeliveryToken End_endServiceDelivery(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_CloseRPCAgent(AsyncCallback callback, object state);
+      void End_CloseRPCAgent(IAsyncResult asyncResult);
       #endif
     }
 
@@ -1125,6 +1130,64 @@ namespace Worldpay.Within.Rpc
         throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "endServiceDelivery failed: unknown result");
       }
 
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_CloseRPCAgent(AsyncCallback callback, object state)
+      {
+        return send_CloseRPCAgent(callback, state);
+      }
+
+      public void End_CloseRPCAgent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_CloseRPCAgent();
+      }
+
+      #endif
+
+      public void CloseRPCAgent()
+      {
+        #if !SILVERLIGHT
+        send_CloseRPCAgent();
+        recv_CloseRPCAgent();
+
+        #else
+        var asyncResult = Begin_CloseRPCAgent(null, null);
+        End_CloseRPCAgent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_CloseRPCAgent(AsyncCallback callback, object state)
+      #else
+      public void send_CloseRPCAgent()
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Call, seqid_));
+        CloseRPCAgent_args args = new CloseRPCAgent_args();
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_CloseRPCAgent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        CloseRPCAgent_result result = new CloseRPCAgent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
     }
     public class Processor : TProcessor {
       public Processor(ISync iface)
@@ -1145,6 +1208,7 @@ namespace Worldpay.Within.Rpc
         processMap_["makePayment"] = makePayment_Process;
         processMap_["beginServiceDelivery"] = beginServiceDelivery_Process;
         processMap_["endServiceDelivery"] = endServiceDelivery_Process;
+        processMap_["CloseRPCAgent"] = CloseRPCAgent_Process;
       }
 
       protected delegate void ProcessFunction(int seqid, TProtocol iprot, TProtocol oprot);
@@ -1689,6 +1753,34 @@ namespace Worldpay.Within.Rpc
           Console.Error.WriteLine(ex.ToString());
           TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
           oprot.WriteMessageBegin(new TMessage("endServiceDelivery", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void CloseRPCAgent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        CloseRPCAgent_args args = new CloseRPCAgent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        CloseRPCAgent_result result = new CloseRPCAgent_result();
+        try
+        {
+          iface_.CloseRPCAgent();
+          oprot.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Exception, seqid));
           x.Write(oprot);
         }
         oprot.WriteMessageEnd();
@@ -4813,6 +4905,131 @@ namespace Worldpay.Within.Rpc
           __sb.Append("Err: ");
           __sb.Append(Err== null ? "<null>" : Err.ToString());
         }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class CloseRPCAgent_args : TBase
+    {
+
+      public CloseRPCAgent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("CloseRPCAgent_args");
+          oprot.WriteStructBegin(struc);
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("CloseRPCAgent_args(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class CloseRPCAgent_result : TBase
+    {
+
+      public CloseRPCAgent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("CloseRPCAgent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("CloseRPCAgent_result(");
         __sb.Append(")");
         return __sb.ToString();
       }

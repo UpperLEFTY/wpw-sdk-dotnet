@@ -315,6 +315,22 @@ namespace Worldpay.Within
             }
         }
 
+        public void CloseRPCAgent()
+        {
+            try
+            {
+                _client.CloseRPCAgent();
+            }
+            catch(TApplicationException tae)
+            {
+                throw new WPWithinException(tae);
+            }
+            catch(Exception e)
+            {
+                throw new WPWithinException(e.Message);
+            }
+        }
+
         private void InitClient(RpcAgentConfiguration config)
         {
             TTransport transport = config.GetThriftTransport();
