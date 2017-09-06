@@ -36,6 +36,8 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
 
     public string Scheme { get; set; }
 
+    public string DeviceName { get; set; }
+
     public ServiceMessage() {
     }
 
@@ -92,6 +94,13 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
             case 6:
               if (field.Type == TType.String) {
                 Scheme = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 7:
+              if (field.Type == TType.String) {
+                DeviceName = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -165,6 +174,14 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           oprot.WriteString(Scheme);
           oprot.WriteFieldEnd();
         }
+        if (DeviceName != null) {
+          field.Name = "deviceName";
+          field.Type = TType.String;
+          field.ID = 7;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteString(DeviceName);
+          oprot.WriteFieldEnd();
+        }
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();
       }
@@ -212,6 +229,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
         __first = false;
         __sb.Append("Scheme: ");
         __sb.Append(Scheme);
+      }
+      if (DeviceName != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("DeviceName: ");
+        __sb.Append(DeviceName);
       }
       __sb.Append(")");
       return __sb.ToString();
