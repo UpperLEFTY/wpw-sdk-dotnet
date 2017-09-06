@@ -1,8 +1,7 @@
 ﻿using System.Net;
+using ThriftDevice = Worldpay.Within.Rpc.Types.Device;
 
-using ThriftDevice = Worldpay.Innovation.WPWithin.Rpc.Types.Device;
-
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class DeviceAdapter
     {

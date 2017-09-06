@@ -3,11 +3,12 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Common.Logging;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
-using Worldpay.Innovation.WPWithin.AgentManager;
+
+using Worldpay.Within.ThriftAdapters;
+using Worldpay.Within.AgentManager;
 using System.Threading;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+namespace Worldpay.Within.Sample.Commands
 {
 
     /// <summary>
@@ -51,11 +52,10 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             /*
              * Creates a simple electric car charging service, that offers a price to deliver 1 kWh of electricy for £25.
              */
-            Service svc = new Service
+            Service svc = new Service(1)
             {
                 Name = "Car charger",
                 Description = "Can charge your hybrid / electric car",
-                Id = 1,
                 Prices = new Dictionary<int, Price>
                 {
                     {

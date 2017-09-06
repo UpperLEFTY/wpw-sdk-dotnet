@@ -45,19 +45,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\Device.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\Error.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\HCECard.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\PaymentResponse.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\Price.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\PricePerUnit.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\Service.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\ServiceDeliveryToken.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\ServiceDetails.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\ServiceMessage.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\Types\TotalPriceResponse.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\WPWithin.cs" />
-    <Compile Include="Worldpay\Innovation\WPWithin\Rpc\WPWithinCallback.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\Device.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\Error.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\HCECard.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\PaymentResponse.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\Price.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\PricePerUnit.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\Service.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\ServiceDeliveryToken.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\ServiceDetails.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\ServiceMessage.cs" />
+    <Compile Include="Worldpay\Within\Rpc\Types\TotalPriceResponse.cs" />
+    <Compile Include="Worldpay\Within\Rpc\WPWithin.cs" />
+    <Compile Include="Worldpay\Within\Rpc\WPWithinCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

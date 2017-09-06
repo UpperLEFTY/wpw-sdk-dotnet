@@ -1,6 +1,6 @@
-﻿using Worldpay.Innovation.WPWithin.Utils;
+﻿using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     /// <summary>
     /// The response to a request to make a payment by a consumer to a producer. 

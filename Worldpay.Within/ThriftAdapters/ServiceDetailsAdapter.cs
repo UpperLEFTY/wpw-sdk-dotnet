@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Thrift.Collections;
-using ThriftServiceDetails = Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails;
+using ThriftServiceDetails = Worldpay.Within.Rpc.Types.ServiceDetails;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class ServiceDetailsAdapter
     {

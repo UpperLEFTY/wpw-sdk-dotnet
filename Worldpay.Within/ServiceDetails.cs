@@ -1,6 +1,6 @@
-﻿using Worldpay.Innovation.WPWithin.Utils;
+﻿using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     /// <summary>
     /// Describes a service offered by a device.

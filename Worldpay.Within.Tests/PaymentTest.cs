@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Worldpay.Innovation.WPWithin;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.ThriftAdapters;
 
 namespace Worldpay.Within.Tests
 {
@@ -23,7 +22,7 @@ namespace Worldpay.Within.Tests
 
             RpcAgentConfiguration producerAgentConfig = new RpcAgentConfiguration
             {
-                ServicePort = 9091,
+                ServicePort = 9091, 
                 LogFile = new FileInfo("testSinglePayment_Producer.log"),
                 LogLevel = "verbose,error,fatal,warn,debug"
             };

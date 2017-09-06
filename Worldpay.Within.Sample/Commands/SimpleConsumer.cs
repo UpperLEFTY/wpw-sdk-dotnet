@@ -3,10 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+using Worldpay.Within.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+
+
+namespace Worldpay.Within.Sample.Commands
 {
     /// <summary>
     ///     Shows how a consumer can purchase and take delivery of a service offered by a producer, such as

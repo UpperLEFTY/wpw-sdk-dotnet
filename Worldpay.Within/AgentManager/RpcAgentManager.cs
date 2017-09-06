@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Common.Logging;
 
-namespace Worldpay.Innovation.WPWithin.AgentManager
+namespace Worldpay.Within.AgentManager
 {
     /// <summary>
     ///     Manages the lifecycle of a Thrift RPC Agent (see /applications/rpc-agent).

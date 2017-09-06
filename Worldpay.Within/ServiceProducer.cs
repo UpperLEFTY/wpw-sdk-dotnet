@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Worldpay.Innovation.WPWithin
+﻿namespace Worldpay.Within
 {
     /**
      * Use this if you want to provide a Host Terminal Emulator (HTE).  Being an HTE means that you are providing a service

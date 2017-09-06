@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using Worldpay.Innovation.WPWithin.Utils;
+using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     public class Device
     {

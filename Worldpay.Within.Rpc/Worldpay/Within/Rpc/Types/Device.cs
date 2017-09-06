@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT

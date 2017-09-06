@@ -15,26 +15,30 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class ServiceDeliveryToken : TBase
+  public partial class ServiceMessage : TBase
   {
 
-    public string Key { get; set; }
+    public string DeviceDescription { get; set; }
 
-    public string Issued { get; set; }
+    public string Hostname { get; set; }
 
-    public string Expiry { get; set; }
+    public int? PortNumber { get; set; }
 
-    public bool? RefundOnExpiry { get; set; }
+    public string ServerId { get; set; }
 
-    public byte[] Signature { get; set; }
+    public string UrlPrefix { get; set; }
 
-    public ServiceDeliveryToken() {
+    public string Scheme { get; set; }
+
+    public string DeviceName { get; set; }
+
+    public ServiceMessage() {
     }
 
     public void Read (TProtocol iprot)
@@ -54,35 +58,49 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           {
             case 1:
               if (field.Type == TType.String) {
-                Key = iprot.ReadString();
+                DeviceDescription = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 2:
               if (field.Type == TType.String) {
-                Issued = iprot.ReadString();
+                Hostname = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 3:
-              if (field.Type == TType.String) {
-                Expiry = iprot.ReadString();
+              if (field.Type == TType.I32) {
+                PortNumber = iprot.ReadI32();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 4:
-              if (field.Type == TType.Bool) {
-                RefundOnExpiry = iprot.ReadBool();
+              if (field.Type == TType.String) {
+                ServerId = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 5:
               if (field.Type == TType.String) {
-                Signature = iprot.ReadBinary();
+                UrlPrefix = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 6:
+              if (field.Type == TType.String) {
+                Scheme = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 7:
+              if (field.Type == TType.String) {
+                DeviceName = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -105,47 +123,63 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("ServiceDeliveryToken");
+        TStruct struc = new TStruct("ServiceMessage");
         oprot.WriteStructBegin(struc);
         TField field = new TField();
-        if (Key != null) {
-          field.Name = "key";
+        if (DeviceDescription != null) {
+          field.Name = "deviceDescription";
           field.Type = TType.String;
           field.ID = 1;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(Key);
+          oprot.WriteString(DeviceDescription);
           oprot.WriteFieldEnd();
         }
-        if (Issued != null) {
-          field.Name = "issued";
+        if (Hostname != null) {
+          field.Name = "hostname";
           field.Type = TType.String;
           field.ID = 2;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(Issued);
+          oprot.WriteString(Hostname);
           oprot.WriteFieldEnd();
         }
-        if (Expiry != null) {
-          field.Name = "expiry";
-          field.Type = TType.String;
+        if (PortNumber != null) {
+          field.Name = "portNumber";
+          field.Type = TType.I32;
           field.ID = 3;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(Expiry);
+          oprot.WriteI32(PortNumber.Value);
           oprot.WriteFieldEnd();
         }
-        if (RefundOnExpiry != null) {
-          field.Name = "refundOnExpiry";
-          field.Type = TType.Bool;
+        if (ServerId != null) {
+          field.Name = "serverId";
+          field.Type = TType.String;
           field.ID = 4;
           oprot.WriteFieldBegin(field);
-          oprot.WriteBool(RefundOnExpiry.Value);
+          oprot.WriteString(ServerId);
           oprot.WriteFieldEnd();
         }
-        if (Signature != null) {
-          field.Name = "signature";
+        if (UrlPrefix != null) {
+          field.Name = "urlPrefix";
           field.Type = TType.String;
           field.ID = 5;
           oprot.WriteFieldBegin(field);
-          oprot.WriteBinary(Signature);
+          oprot.WriteString(UrlPrefix);
+          oprot.WriteFieldEnd();
+        }
+        if (Scheme != null) {
+          field.Name = "scheme";
+          field.Type = TType.String;
+          field.ID = 6;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteString(Scheme);
+          oprot.WriteFieldEnd();
+        }
+        if (DeviceName != null) {
+          field.Name = "deviceName";
+          field.Type = TType.String;
+          field.ID = 7;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteString(DeviceName);
           oprot.WriteFieldEnd();
         }
         oprot.WriteFieldStop();
@@ -158,37 +192,49 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("ServiceDeliveryToken(");
+      StringBuilder __sb = new StringBuilder("ServiceMessage(");
       bool __first = true;
-      if (Key != null) {
+      if (DeviceDescription != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("Key: ");
-        __sb.Append(Key);
+        __sb.Append("DeviceDescription: ");
+        __sb.Append(DeviceDescription);
       }
-      if (Issued != null) {
+      if (Hostname != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("Issued: ");
-        __sb.Append(Issued);
+        __sb.Append("Hostname: ");
+        __sb.Append(Hostname);
       }
-      if (Expiry != null) {
+      if (PortNumber != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("Expiry: ");
-        __sb.Append(Expiry);
+        __sb.Append("PortNumber: ");
+        __sb.Append(PortNumber);
       }
-      if (RefundOnExpiry != null) {
+      if (ServerId != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("RefundOnExpiry: ");
-        __sb.Append(RefundOnExpiry);
+        __sb.Append("ServerId: ");
+        __sb.Append(ServerId);
       }
-      if (Signature != null) {
+      if (UrlPrefix != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("Signature: ");
-        __sb.Append(Signature);
+        __sb.Append("UrlPrefix: ");
+        __sb.Append(UrlPrefix);
+      }
+      if (Scheme != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("Scheme: ");
+        __sb.Append(Scheme);
+      }
+      if (DeviceName != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("DeviceName: ");
+        __sb.Append(DeviceName);
       }
       __sb.Append(")");
       return __sb.ToString();

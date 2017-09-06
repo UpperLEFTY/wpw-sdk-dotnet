@@ -1,7 +1,7 @@
 ﻿using System;
-using Worldpay.Innovation.WPWithin.Utils;
+using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     /// <summary>
     ///     The price of a single unit of the service being described by a <see cref="Price" />.  Immutable.

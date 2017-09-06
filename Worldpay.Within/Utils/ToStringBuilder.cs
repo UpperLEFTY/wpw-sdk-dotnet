@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Worldpay.Innovation.WPWithin.Utils
+namespace Worldpay.Within.Utils
 {
 
     /// <summary>

@@ -15,20 +15,18 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class PricePerUnit : TBase
+  public partial class Error : TException, TBase
   {
 
-    public int? Amount { get; set; }
+    public string Message { get; set; }
 
-    public string CurrencyCode { get; set; }
-
-    public PricePerUnit() {
+    public Error() {
     }
 
     public void Read (TProtocol iprot)
@@ -47,15 +45,8 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.I32) {
-                Amount = iprot.ReadI32();
-              } else { 
-                TProtocolUtil.Skip(iprot, field.Type);
-              }
-              break;
-            case 2:
               if (field.Type == TType.String) {
-                CurrencyCode = iprot.ReadString();
+                Message = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -78,23 +69,15 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("PricePerUnit");
+        TStruct struc = new TStruct("Error");
         oprot.WriteStructBegin(struc);
         TField field = new TField();
-        if (Amount != null) {
-          field.Name = "amount";
-          field.Type = TType.I32;
+        if (Message != null) {
+          field.Name = "message";
+          field.Type = TType.String;
           field.ID = 1;
           oprot.WriteFieldBegin(field);
-          oprot.WriteI32(Amount.Value);
-          oprot.WriteFieldEnd();
-        }
-        if (CurrencyCode != null) {
-          field.Name = "currencyCode";
-          field.Type = TType.String;
-          field.ID = 2;
-          oprot.WriteFieldBegin(field);
-          oprot.WriteString(CurrencyCode);
+          oprot.WriteString(Message);
           oprot.WriteFieldEnd();
         }
         oprot.WriteFieldStop();
@@ -107,19 +90,13 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("PricePerUnit(");
+      StringBuilder __sb = new StringBuilder("Error(");
       bool __first = true;
-      if (Amount != null) {
+      if (Message != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("Amount: ");
-        __sb.Append(Amount);
-      }
-      if (CurrencyCode != null) {
-        if(!__first) { __sb.Append(", "); }
-        __first = false;
-        __sb.Append("CurrencyCode: ");
-        __sb.Append(CurrencyCode);
+        __sb.Append("Message: ");
+        __sb.Append(Message);
       }
       __sb.Append(")");
       return __sb.ToString();

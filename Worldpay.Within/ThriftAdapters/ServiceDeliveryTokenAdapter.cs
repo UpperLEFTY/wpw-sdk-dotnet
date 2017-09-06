@@ -1,6 +1,6 @@
-﻿using ThriftServiceDeliveryToken=Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken;
+﻿using ThriftServiceDeliveryToken=Worldpay.Within.Rpc.Types.ServiceDeliveryToken;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class ServiceDeliveryTokenAdapter
     {

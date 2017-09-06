@@ -1,9 +1,9 @@
-﻿using Worldpay.Innovation.WPWithin.Sample.Commands;
+﻿using Worldpay.Within.Sample.Commands;
 
 using System;
 using System.Runtime.InteropServices;
 
-namespace Worldpay.Innovation.WPWithin.Sample
+namespace Worldpay.Within.Sample
 {
     internal class Program
     {
