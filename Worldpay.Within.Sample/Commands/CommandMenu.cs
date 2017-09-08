@@ -73,7 +73,7 @@ namespace Worldpay.Within.Sample.Commands
             RpcAgentConfiguration consumerConfig = new RpcAgentConfiguration
             {
                 LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("WPWithinConsumer.log"),
+                LogFile = new FileInfo("rpc-within-find-producer.log"),
                 ServicePort = 9096,
             };
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
@@ -133,7 +133,7 @@ namespace Worldpay.Within.Sample.Commands
             RpcAgentConfiguration consumerConfig = new RpcAgentConfiguration
             {
                 LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("WPWithinConsumer.log"),
+                LogFile = new FileInfo("rpc-within-consumer.log"),
                 ServicePort = 9096,
             };
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
@@ -173,7 +173,7 @@ namespace Worldpay.Within.Sample.Commands
                 ServicePort = 9091,
                 CallbackPort = 9092,
                 LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("wpwithin.log"),
+                LogFile = new FileInfo("rpc-within-producer.log"),
             };
             RpcAgentManager rpcAgentMgr = new RpcAgentManager(rpcAgentConf);
             rpcAgentMgr.StartThriftRpcAgentProcess();
