@@ -1,32 +1,68 @@
-# Worldpay Within - The .NET SDK
+# .NET Software Development Kit (SDK)
 
-The .NET implementation for the Worldpay Within IoT payment SDK. This SDK, or Software Development Kit, enables smart devices to discover each other, negogiate a price for services, make a payment (through the Worldpay Online Payment gateway) for services, and then consume services via a 'trusted trigger'. For more information see our documentation website here: http://www.worldpaywithin.com.
+The .NET implementation for the Worldpay Within IoT payment SDK. This SDK, or Software Development Kit, enables smart devices to discover each other, negogiate a price for services, make a payment (through the Worldpay Online Payment gateway) for services, and then consume services via a *trusted trigger*. For more information see our documentation website here: http://www.worldpaywithin.com.
 
-![The Worldpay Within puzzle piece](http://wptechinnovation.github.io/worldpay-within-sdk/images/architecture/worldpayWithinFig1.png)
+## Prerequisites
 
-## Getting Started
+* Before you get started, you should have the .NET 4.5 framework and Visual Studio 2017 (any edition) installed on your system. We've tested this wrapper with Visual 2017 Community Edition.
+* You should create an account with Worldpay Online so that you're able to generate your own test API key. You'll replace the Worldpay test keys with your own in the SDK. **Warning: Make sure you only use test API keys.**
 
-The .NET Worldpay Within wrapper provides a convenient entry point for application developers who wish to create applications using the Worldpay Within SDK.
+## Get Started
 
-Currently, there is no [nuget](https://nuget.org]) published libraries for this.  This issue is being tracked in [Issue #1 on GitHub](https://github.com/WPTechInnovation/wpw-sdk-dotnet/issues/1).
+The .NET Worldpay Within SDK provides a convenient entry point for application developers who wish to create applications using the Worldpay Within SDK.
+
+Currently, there are no [NuGet](https://nuget.org]) published libraries for the SDK.  This issue is being tracked in [Issue #1 on GitHub](https://github.com/WPTechInnovation/wpw-sdk-dotnet/issues/1).
 
 For now, you will need to build the project yourself, by following these steps:
 
-1. Download the repository, e.g. `git clone git@github.com:WPTechInnovation/wpw-sdk-dotnet.git`.  See [project homepage](https://github.com/WPTechInnovation/wpw-sdk-dotnet) for more options.
-1. Open up the solution file in Visual Studio 2017 (community edition or greater).
+1. Clone or download the repository, e.g. `git clone git@github.com:WPTechInnovation/wpw-sdk-dotnet.git`.  See the [project homepage](https://github.com/WPTechInnovation/wpw-sdk-dotnet) on GitHub for more options.
+1. Open up the solution file in Visual Studio 2017 (community edition or better).
 1. Build the solution.  Note that you must be connected to the Internet for nuget dependencies to be downloaded:
     * ApacheThrift 0.10.0
     * Common.Logging 3.3.1
     * Common.Logging.Core 3.3.1
+1. Download the RPC Agent binary build for your platform.  The RPC Agents can be downloaded from [the wpw-sdk-iot-core](https://github.com/WPTechInnovation/wpw-sdk-iot-core/tree/master/bin) project.
+    * To configure the .NET SDK to find the agent, download the agent in to a directory named bin and set a `WPW_HOME` environment variable to point to the directory above it.  For example, if `rpc-agent-windows-386.exe ` is installed in `C:\users\Andy\wpw\bin`, then set `WPW_HOME` to `C:\users\Andy\wpw`.
 
-To try it out:
-1. Run the Unit Tests in `Worldpay.Within.Tests`.
-1. Run the Sample application in `Worldpay.Within.Sample`.
+## Run the examples
 
+Once you've loaded the projects in to Visual Studio and built the project successfully (please note you can[ report any problems or errors to us](https://github.com/WPTechInnovation/wpw-sdk-dotnet/issues) on Github).
 
-## Introduction to the different projects
+To run a sample app, run the `Worldpay.Within.Sample` project.
 
-## Worldpay.Within
+We'd recommend using your own test API keys for this.  We've left our ones in the code, so that it "just works", but you won't be able to see the payments with our keys unless you change them. To do this, open `SimpleProducer.cs` and search for `MerchantServiceKey` in the `PSPConfig` declaration you can replace the existing MerchantServiceKey with your own value.  
+
+The sample application is a Windows console application.  To make a simple payment, do the following:
+
+1. Select option 1 *Start Simple Producer*.  This will start a local RPC Agent and register a separate producer with it.  Ths producer has a very simple service declaration.
+1. Select option 3 *Consume Purchase*.  This will start another RPC Agent and attempt to consume the first product of the first service it finds on the network.  (This will most likely be your producer.)
+
+The sample application produces lots of logging, you can control this by editing the `App.config` file in the root of the sample project directory.
+
+## See the payments
+
+Once the devices have successfully communicated with each other to make a payment, you'll want to check to make sure that your devices are successfully making and receiving payments.
+
+If you used your own test API keys
+1. Login to Worldpay Online.
+1. You'll see your dashboard. Scroll down and you should see the payment within your Recent Orders.
+
+If you've used Worldpay's own test API keys
+1. Login to Worldpay Online.
+1. Got to Settings > API keys and get your test keys.
+1. Replace the keys in `SimpleProducer.cs`.
+
+Re-run the sample application and you should see the payments coming through on the Worldpay Online payments dashboard.
+
+## So what's happening?
+
+![Sequence Diagram of basic Worldpay Within producer and consumer flow](file:///C:/Users/Andy/wpw/wpw-doc-dev/images/architecture/serviceOverview.png)
+
+You can see there are four phases: Discover, Negotiation, Payment, and Service Delivery. For more information, see [Worldpay Within](https://wptechinnovation.github.io/worldpay-within-sdk/).
+
+## Introduction to the different .NET projects
+
+### Worldpay.Within
 
 This is the main .NET wrapper entry point assembly.  The public API is contained within here, inside the `Worldpay.Within` package.
 
@@ -46,7 +82,7 @@ Note that the above oaths assume that you have downloaded the [Worldpay Within m
 
 Be sure to refresh the project source tree in Visual Studio to ensure that any newly generated files are included in the project.  If you fail to do this, expect compile errors for missing types to be thrown.
 
-## Using
+## Using in your own applications
 
 To use Worldpay Within, add the following DLLs to your project path:
 
@@ -56,9 +92,3 @@ To use Worldpay Within, add the following DLLs to your project path:
 1. `Logging Framework` - whatever logging framework we're going to use.
 
 To run a Worldpay Within application, the Thrift RPC code will need to be able to talk to an RPC Agent.  The RPC Agent is a standalone application that manages the communication with remote third parties (for example, if you are creating a Consumer then the SDK code communicates with a local RPC Agent using the Thrift protocol, which then talks via HTTP to a remote RPC Agent, which then talks to a local Producer via the Thrift protocol).
-
-
-
-
-
-  
