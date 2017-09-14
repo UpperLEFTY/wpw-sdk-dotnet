@@ -29,8 +29,6 @@ namespace Worldpay.Within.AgentManager
     public class RpcAgentConfiguration
     {
         private static readonly ILog Log = LogManager.GetLogger<RpcAgentConfiguration>();
-
-
         /// <summary>
         ///     The name of the environment variable that contains the home directory for the Worldpay Within SDK.
         ///     The RPC Agent will be looked for under the "bin" subdirectory.
@@ -190,7 +188,7 @@ namespace Worldpay.Within.AgentManager
                 string agentFilename = RpcAgentFilenameGenerator.GetForCurrent();
                 Log.Info("Searching for " + agentFilename);
 
-                _rpcAgentPath = LookForRpcAgentIn("wpw-bin") ??
+                _rpcAgentPath = LookForRpcAgentIn(string.Join("iot-core-component", System.IO.Path.DirectorySeparatorChar, "bin")) ??
                                 LookForRpcAgentIn(GetPathFromApplicationConfig()) ??
                                 LookForRpcAgentIn(GetPathFromEnvironment());
 
@@ -309,7 +307,9 @@ namespace Worldpay.Within.AgentManager
                 return null;
             }
             FileInfo fi =
-                new FileInfo(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), dirToLookIn,
+                new FileInfo(string.Join(
+                    GetParentPath(3), 
+                    dirToLookIn, 
                     RpcAgentFilenameGenerator.GetForCurrent()));
             return DoesFileExist(fi) ? fi.FullName : null;
         }
@@ -328,6 +328,16 @@ namespace Worldpay.Within.AgentManager
             bool result = file.Exists;
             Log.Info($"File {filename} does {(result ? "" : "not ")}exist");
             return result;
+        }
+        private string GetParentPath(int levelsUp)
+        {
+            string currentDir = Directory.GetCurrentDirectory().ToString();
+            for (int i=0;i<levelsUp;i++)
+            {
+                currentDir =  Directory.GetParent(currentDir).ToString();
+                
+            }
+            return string.Join(currentDir, System.IO.Path.DirectorySeparatorChar);
         }
 
         private string GetPathFromEnvironment()
