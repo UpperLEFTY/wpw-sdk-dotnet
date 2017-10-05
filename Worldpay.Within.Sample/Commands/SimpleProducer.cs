@@ -85,10 +85,53 @@ namespace Worldpay.Within.Sample.Commands
 
             Log.Info("Starting service broadcast");
 
+            // Register on SDK callbacks just to expose some transaction data here
+            // on sample producer wrapper (if required).
+            _service.OnBeginServiceDelivery += _service_OnBeginServiceDelivery;
+            _service.OnEndServiceDelivery += _service_OnEndServiceDelivery;
+            _service.OnMakePaymentEvent += _service_OnMakePaymentEvent;
+            _service.OnServicePricesEvent += _service_OnServicePricesEvent;
+            _service.OnServiceTotalPriceEvent += _service_OnServiceTotalPriceEvent;
+            _service.OnErrorEvent += _service_OnErrorEvent;
+
             /* Asynchronously broadcast the service's availablility until stopped
              */
             _task = Task.Run(() => _service.StartServiceBroadcast(0));
             return CommandResult.Success;
+        }
+
+        private void _service_OnBeginServiceDelivery(int serviceId, int servicePriceID, ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+        {
+            _output.WriteLine("OnBeginServiceDelivery:: serviceId: {0}, servicePriceID: {1}, unitsToSupply: {2}",
+                serviceId, servicePriceID, unitsToSupply);
+        }
+        private void _service_OnEndServiceDelivery(int serviceId, ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+        {
+            _output.WriteLine("OnEndServiceDelivery:: serviceId: {0}, unitsReceived: {1}",
+                serviceId, unitsReceived);
+        }
+
+        private void _service_OnMakePaymentEvent(int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+        {
+            _output.WriteLine("OnMakePaymentEvent:: totalPrice: {0}, orderCurrency: {1}, clientToken: {2}, orderDescription: {3}, uuid{4}",
+                totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+        }
+
+        private void _service_OnServicePricesEvent(string remoteAddr, int serviceId)
+        {
+            _output.WriteLine("OnServicePricesEvent:: remoteAddr: {0}, serviceId: {1}",
+                remoteAddr, serviceId);
+        }
+
+        private void _service_OnServiceTotalPriceEvent(string remoteAddr, int serviceID, TotalPriceResponse totalPriceResp)
+        {
+            _output.WriteLine("OnServiceTotalPriceEvent:: remoteAddr: {0}, serviceID: {1}",
+                remoteAddr, serviceID);
+        }
+
+        private void _service_OnErrorEvent(string msg)
+        {
+            _output.WriteLine("OnErrorEvent:: msg: {0}", msg);
         }
 
         /// <summary>

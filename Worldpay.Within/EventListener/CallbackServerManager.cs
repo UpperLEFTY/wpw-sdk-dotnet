@@ -5,6 +5,7 @@ using Thrift.Server;
 using Thrift.Transport;
 using Worldpay.Within.AgentManager;
 using Worldpay.Within.Rpc;
+using Worldpay.Within.Rpc.Types;
 using Worldpay.Within.ThriftAdapters;
 
 namespace Worldpay.Within.EventListener
@@ -37,14 +38,11 @@ namespace Worldpay.Within.EventListener
             _config = config;
         }
 
-        public void beginServiceDelivery(int serviceId, Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
-            int unitsToSupply)
+        public void beginServiceDelivery(int serviceID, int servicePriceID, Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
         {
-            Log.DebugFormat(
-                "BeginServiceDelivery invoked (serviceId={0}, serviceDeliveryToken={1}, unitsToSupply={2})", serviceId,
-                serviceDeliveryToken, unitsToSupply);
-            BeginServiceDelivery?.Invoke(serviceId, ServiceDeliveryTokenAdapter.Create(serviceDeliveryToken),
-                unitsToSupply);
+            Log.DebugFormat("BeginServiceDelivery invoked (serviceId={0}, servicePriceID={1}, serviceDeliveryToken={2}, unitsToSupply={3})",
+                                serviceID, servicePriceID, serviceDeliveryToken, unitsToSupply);
+            BeginServiceDelivery?.Invoke(serviceID, servicePriceID, ServiceDeliveryTokenAdapter.Create(serviceDeliveryToken), unitsToSupply);
         }
 
         public void endServiceDelivery(int serviceId, Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken,
@@ -56,9 +54,50 @@ namespace Worldpay.Within.EventListener
                 unitsReceived);
         }
 
+        public void makePaymentEvent(int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+        {
+            Log.DebugFormat("MakePaymentEvent invoked (totalPrice={0}, orderCurrency={1}, clientToken={2}, orderDescription={3}, uuid={4})",
+                totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+            MakePaymentEvent?.Invoke(totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+        }
+
+        public void serviceDiscoveryEvent(string remoteAddr)
+        {
+            Log.DebugFormat("ServiceDiscoveryEvent invoked (remoteAddr={0})", remoteAddr);
+            ServiceDiscoveryEvent?.Invoke(remoteAddr);
+        }
+
+        public void servicePricesEvent(string remoteAddr, int serviceId)
+        {
+            Log.DebugFormat("ServicePricesEvent invoked (remoteAddr={0}, serviceId{1})", remoteAddr, serviceId);
+            ServicePricesEvent?.Invoke(remoteAddr, serviceId);
+        }
+
+        public void serviceTotalPriceEvent(string remoteAddr, int serviceID, Rpc.Types.TotalPriceResponse totalPriceResp)
+        {
+            Log.DebugFormat("ServiceTotalPriceEvent invoked (remoteAddr={0}, serviceID{1})", remoteAddr, serviceID);
+            ServiceTotalPriceEvent?.Invoke(remoteAddr, serviceID, TotalPriceResponseAdapter.Create(totalPriceResp));
+        }
+
+        public void errorEvent(string msg)
+        {
+            Log.DebugFormat("ErrorEvent invoked (msg={0})", msg);
+            ErrorEvent?.Invoke(msg);
+        }
+
         public event WPWithinService.EndServiceDeliveryHandler EndServiceDelivery;
 
         public event WPWithinService.BeginServiceDeliveryHandler BeginServiceDelivery;
+
+        public event WPWithinService.MakePaymentEventHandler MakePaymentEvent;
+
+        public event WPWithinService.ServiceDiscoveryEventHandler ServiceDiscoveryEvent;
+
+        public event WPWithinService.ServicePricesEventHandler ServicePricesEvent;
+
+        public event WPWithinService.ServiceTotalPriceEventHandler ServiceTotalPriceEvent;
+
+        public event WPWithinService.ErrorEventHandler ErrorEvent;
 
         public void Start()
         {

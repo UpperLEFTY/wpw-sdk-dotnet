@@ -37,7 +37,7 @@ namespace Worldpay.Within.Rpc
       Worldpay.Within.Rpc.Types.PaymentResponse makePayment(Worldpay.Within.Rpc.Types.TotalPriceResponse request);
       Worldpay.Within.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
       Worldpay.Within.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
-	  void CloseRPCAgent();
+      void CloseRPCAgent();
     }
 
     /// <summary>

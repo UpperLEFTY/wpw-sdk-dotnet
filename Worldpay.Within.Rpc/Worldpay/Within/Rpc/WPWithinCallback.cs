@@ -22,8 +22,13 @@ namespace Worldpay.Within.Rpc
     /// WorldpayWithin Callback Service - RPC clients implement this service to enable callbacks from WorldpayWithin Service
     /// </summary>
     public interface ISync {
-      void beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      void beginServiceDelivery(int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
       void endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      void makePaymentEvent(int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid);
+      void serviceDiscoveryEvent(string remoteAddr);
+      void servicePricesEvent(string remoteAddr, int serviceId);
+      void serviceTotalPriceEvent(string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp);
+      void errorEvent(string msg);
     }
 
     /// <summary>
@@ -31,12 +36,32 @@ namespace Worldpay.Within.Rpc
     /// </summary>
     public interface Iface : ISync {
       #if SILVERLIGHT
-      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
       void End_beginServiceDelivery(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
       void End_endServiceDelivery(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_makePaymentEvent(AsyncCallback callback, object state, int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid);
+      void End_makePaymentEvent(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_serviceDiscoveryEvent(AsyncCallback callback, object state, string remoteAddr);
+      void End_serviceDiscoveryEvent(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_servicePricesEvent(AsyncCallback callback, object state, string remoteAddr, int serviceId);
+      void End_servicePricesEvent(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_serviceTotalPriceEvent(AsyncCallback callback, object state, string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp);
+      void End_serviceTotalPriceEvent(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_errorEvent(AsyncCallback callback, object state, string msg);
+      void End_errorEvent(IAsyncResult asyncResult);
       #endif
     }
 
@@ -101,9 +126,9 @@ namespace Worldpay.Within.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
-        return send_beginServiceDelivery(callback, state, serviceID, serviceDeliveryToken, unitsToSupply);
+        return send_beginServiceDelivery(callback, state, serviceID, servicePriceID, serviceDeliveryToken, unitsToSupply);
       }
 
       public void End_beginServiceDelivery(IAsyncResult asyncResult)
@@ -114,27 +139,28 @@ namespace Worldpay.Within.Rpc
 
       #endif
 
-      public void beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public void beginServiceDelivery(int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
         #if !SILVERLIGHT
-        send_beginServiceDelivery(serviceID, serviceDeliveryToken, unitsToSupply);
+        send_beginServiceDelivery(serviceID, servicePriceID, serviceDeliveryToken, unitsToSupply);
         recv_beginServiceDelivery();
 
         #else
-        var asyncResult = Begin_beginServiceDelivery(null, null, serviceID, serviceDeliveryToken, unitsToSupply);
+        var asyncResult = Begin_beginServiceDelivery(null, null, serviceID, servicePriceID, serviceDeliveryToken, unitsToSupply);
         End_beginServiceDelivery(asyncResult);
 
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #else
-      public void send_beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public void send_beginServiceDelivery(int serviceID, int servicePriceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("beginServiceDelivery", TMessageType.Call, seqid_));
         beginServiceDelivery_args args = new beginServiceDelivery_args();
         args.ServiceID = serviceID;
+        args.ServicePriceID = servicePriceID;
         args.ServiceDeliveryToken = serviceDeliveryToken;
         args.UnitsToSupply = unitsToSupply;
         args.Write(oprot_);
@@ -227,6 +253,308 @@ namespace Worldpay.Within.Rpc
         return;
       }
 
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_makePaymentEvent(AsyncCallback callback, object state, int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+      {
+        return send_makePaymentEvent(callback, state, totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+      }
+
+      public void End_makePaymentEvent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_makePaymentEvent();
+      }
+
+      #endif
+
+      public void makePaymentEvent(int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+      {
+        #if !SILVERLIGHT
+        send_makePaymentEvent(totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+        recv_makePaymentEvent();
+
+        #else
+        var asyncResult = Begin_makePaymentEvent(null, null, totalPrice, orderCurrency, clientToken, orderDescription, uuid);
+        End_makePaymentEvent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_makePaymentEvent(AsyncCallback callback, object state, int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+      #else
+      public void send_makePaymentEvent(int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("makePaymentEvent", TMessageType.Call, seqid_));
+        makePaymentEvent_args args = new makePaymentEvent_args();
+        args.TotalPrice = totalPrice;
+        args.OrderCurrency = orderCurrency;
+        args.ClientToken = clientToken;
+        args.OrderDescription = orderDescription;
+        args.Uuid = uuid;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_makePaymentEvent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        makePaymentEvent_result result = new makePaymentEvent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_serviceDiscoveryEvent(AsyncCallback callback, object state, string remoteAddr)
+      {
+        return send_serviceDiscoveryEvent(callback, state, remoteAddr);
+      }
+
+      public void End_serviceDiscoveryEvent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_serviceDiscoveryEvent();
+      }
+
+      #endif
+
+      public void serviceDiscoveryEvent(string remoteAddr)
+      {
+        #if !SILVERLIGHT
+        send_serviceDiscoveryEvent(remoteAddr);
+        recv_serviceDiscoveryEvent();
+
+        #else
+        var asyncResult = Begin_serviceDiscoveryEvent(null, null, remoteAddr);
+        End_serviceDiscoveryEvent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_serviceDiscoveryEvent(AsyncCallback callback, object state, string remoteAddr)
+      #else
+      public void send_serviceDiscoveryEvent(string remoteAddr)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("serviceDiscoveryEvent", TMessageType.Call, seqid_));
+        serviceDiscoveryEvent_args args = new serviceDiscoveryEvent_args();
+        args.RemoteAddr = remoteAddr;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_serviceDiscoveryEvent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        serviceDiscoveryEvent_result result = new serviceDiscoveryEvent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_servicePricesEvent(AsyncCallback callback, object state, string remoteAddr, int serviceId)
+      {
+        return send_servicePricesEvent(callback, state, remoteAddr, serviceId);
+      }
+
+      public void End_servicePricesEvent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_servicePricesEvent();
+      }
+
+      #endif
+
+      public void servicePricesEvent(string remoteAddr, int serviceId)
+      {
+        #if !SILVERLIGHT
+        send_servicePricesEvent(remoteAddr, serviceId);
+        recv_servicePricesEvent();
+
+        #else
+        var asyncResult = Begin_servicePricesEvent(null, null, remoteAddr, serviceId);
+        End_servicePricesEvent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_servicePricesEvent(AsyncCallback callback, object state, string remoteAddr, int serviceId)
+      #else
+      public void send_servicePricesEvent(string remoteAddr, int serviceId)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("servicePricesEvent", TMessageType.Call, seqid_));
+        servicePricesEvent_args args = new servicePricesEvent_args();
+        args.RemoteAddr = remoteAddr;
+        args.ServiceId = serviceId;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_servicePricesEvent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        servicePricesEvent_result result = new servicePricesEvent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_serviceTotalPriceEvent(AsyncCallback callback, object state, string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp)
+      {
+        return send_serviceTotalPriceEvent(callback, state, remoteAddr, serviceID, totalPriceResp);
+      }
+
+      public void End_serviceTotalPriceEvent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_serviceTotalPriceEvent();
+      }
+
+      #endif
+
+      public void serviceTotalPriceEvent(string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp)
+      {
+        #if !SILVERLIGHT
+        send_serviceTotalPriceEvent(remoteAddr, serviceID, totalPriceResp);
+        recv_serviceTotalPriceEvent();
+
+        #else
+        var asyncResult = Begin_serviceTotalPriceEvent(null, null, remoteAddr, serviceID, totalPriceResp);
+        End_serviceTotalPriceEvent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_serviceTotalPriceEvent(AsyncCallback callback, object state, string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp)
+      #else
+      public void send_serviceTotalPriceEvent(string remoteAddr, int serviceID, Worldpay.Within.Rpc.Types.TotalPriceResponse totalPriceResp)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("serviceTotalPriceEvent", TMessageType.Call, seqid_));
+        serviceTotalPriceEvent_args args = new serviceTotalPriceEvent_args();
+        args.RemoteAddr = remoteAddr;
+        args.ServiceID = serviceID;
+        args.TotalPriceResp = totalPriceResp;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_serviceTotalPriceEvent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        serviceTotalPriceEvent_result result = new serviceTotalPriceEvent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_errorEvent(AsyncCallback callback, object state, string msg)
+      {
+        return send_errorEvent(callback, state, msg);
+      }
+
+      public void End_errorEvent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_errorEvent();
+      }
+
+      #endif
+
+      public void errorEvent(string msg)
+      {
+        #if !SILVERLIGHT
+        send_errorEvent(msg);
+        recv_errorEvent();
+
+        #else
+        var asyncResult = Begin_errorEvent(null, null, msg);
+        End_errorEvent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_errorEvent(AsyncCallback callback, object state, string msg)
+      #else
+      public void send_errorEvent(string msg)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("errorEvent", TMessageType.Call, seqid_));
+        errorEvent_args args = new errorEvent_args();
+        args.Msg = msg;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_errorEvent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        errorEvent_result result = new errorEvent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
     }
     public class Processor : TProcessor {
       public Processor(ISync iface)
@@ -234,6 +562,11 @@ namespace Worldpay.Within.Rpc
         iface_ = iface;
         processMap_["beginServiceDelivery"] = beginServiceDelivery_Process;
         processMap_["endServiceDelivery"] = endServiceDelivery_Process;
+        processMap_["makePaymentEvent"] = makePaymentEvent_Process;
+        processMap_["serviceDiscoveryEvent"] = serviceDiscoveryEvent_Process;
+        processMap_["servicePricesEvent"] = servicePricesEvent_Process;
+        processMap_["serviceTotalPriceEvent"] = serviceTotalPriceEvent_Process;
+        processMap_["errorEvent"] = errorEvent_Process;
       }
 
       protected delegate void ProcessFunction(int seqid, TProtocol iprot, TProtocol oprot);
@@ -276,7 +609,7 @@ namespace Worldpay.Within.Rpc
         {
           try
           {
-            iface_.beginServiceDelivery(args.ServiceID.Value, args.ServiceDeliveryToken, args.UnitsToSupply.Value);
+            iface_.beginServiceDelivery(args.ServiceID.Value, args.ServicePriceID.Value, args.ServiceDeliveryToken, args.UnitsToSupply.Value);
           }
           catch (Worldpay.Within.Rpc.Types.Error err)
           {
@@ -336,6 +669,146 @@ namespace Worldpay.Within.Rpc
         oprot.Transport.Flush();
       }
 
+      public void makePaymentEvent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        makePaymentEvent_args args = new makePaymentEvent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        makePaymentEvent_result result = new makePaymentEvent_result();
+        try
+        {
+          iface_.makePaymentEvent(args.TotalPrice.Value, args.OrderCurrency, args.ClientToken, args.OrderDescription, args.Uuid);
+          oprot.WriteMessageBegin(new TMessage("makePaymentEvent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("makePaymentEvent", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void serviceDiscoveryEvent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        serviceDiscoveryEvent_args args = new serviceDiscoveryEvent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        serviceDiscoveryEvent_result result = new serviceDiscoveryEvent_result();
+        try
+        {
+          iface_.serviceDiscoveryEvent(args.RemoteAddr);
+          oprot.WriteMessageBegin(new TMessage("serviceDiscoveryEvent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("serviceDiscoveryEvent", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void servicePricesEvent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        servicePricesEvent_args args = new servicePricesEvent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        servicePricesEvent_result result = new servicePricesEvent_result();
+        try
+        {
+          iface_.servicePricesEvent(args.RemoteAddr, args.ServiceId.Value);
+          oprot.WriteMessageBegin(new TMessage("servicePricesEvent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("servicePricesEvent", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void serviceTotalPriceEvent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        serviceTotalPriceEvent_args args = new serviceTotalPriceEvent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        serviceTotalPriceEvent_result result = new serviceTotalPriceEvent_result();
+        try
+        {
+          iface_.serviceTotalPriceEvent(args.RemoteAddr, args.ServiceID.Value, args.TotalPriceResp);
+          oprot.WriteMessageBegin(new TMessage("serviceTotalPriceEvent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("serviceTotalPriceEvent", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void errorEvent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        errorEvent_args args = new errorEvent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        errorEvent_result result = new errorEvent_result();
+        try
+        {
+          iface_.errorEvent(args.Msg);
+          oprot.WriteMessageBegin(new TMessage("errorEvent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("errorEvent", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
     }
 
 
@@ -346,6 +819,8 @@ namespace Worldpay.Within.Rpc
     {
 
       public int? ServiceID { get; set; }
+
+      public int? ServicePriceID { get; set; }
 
       public Worldpay.Within.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
 
@@ -377,6 +852,13 @@ namespace Worldpay.Within.Rpc
                 }
                 break;
               case 2:
+                if (field.Type == TType.I32) {
+                  ServicePriceID = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 3:
                 if (field.Type == TType.Struct) {
                   ServiceDeliveryToken = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   ServiceDeliveryToken.Read(iprot);
@@ -384,7 +866,7 @@ namespace Worldpay.Within.Rpc
                   TProtocolUtil.Skip(iprot, field.Type);
                 }
                 break;
-              case 3:
+              case 4:
                 if (field.Type == TType.I32) {
                   UnitsToSupply = iprot.ReadI32();
                 } else { 
@@ -420,10 +902,18 @@ namespace Worldpay.Within.Rpc
             oprot.WriteI32(ServiceID.Value);
             oprot.WriteFieldEnd();
           }
+          if (ServicePriceID != null) {
+            field.Name = "servicePriceID";
+            field.Type = TType.I32;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(ServicePriceID.Value);
+            oprot.WriteFieldEnd();
+          }
           if (ServiceDeliveryToken != null) {
             field.Name = "serviceDeliveryToken";
             field.Type = TType.Struct;
-            field.ID = 2;
+            field.ID = 3;
             oprot.WriteFieldBegin(field);
             ServiceDeliveryToken.Write(oprot);
             oprot.WriteFieldEnd();
@@ -431,7 +921,7 @@ namespace Worldpay.Within.Rpc
           if (UnitsToSupply != null) {
             field.Name = "unitsToSupply";
             field.Type = TType.I32;
-            field.ID = 3;
+            field.ID = 4;
             oprot.WriteFieldBegin(field);
             oprot.WriteI32(UnitsToSupply.Value);
             oprot.WriteFieldEnd();
@@ -453,6 +943,12 @@ namespace Worldpay.Within.Rpc
           __first = false;
           __sb.Append("ServiceID: ");
           __sb.Append(ServiceID);
+        }
+        if (ServicePriceID != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("ServicePriceID: ");
+          __sb.Append(ServicePriceID);
         }
         if (ServiceDeliveryToken != null) {
           if(!__first) { __sb.Append(", "); }
@@ -778,6 +1274,918 @@ namespace Worldpay.Within.Rpc
           __sb.Append("Err: ");
           __sb.Append(Err== null ? "<null>" : Err.ToString());
         }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class makePaymentEvent_args : TBase
+    {
+
+      public int? TotalPrice { get; set; }
+
+      public string OrderCurrency { get; set; }
+
+      public string ClientToken { get; set; }
+
+      public string OrderDescription { get; set; }
+
+      public string Uuid { get; set; }
+
+      public makePaymentEvent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.I32) {
+                  TotalPrice = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 2:
+                if (field.Type == TType.String) {
+                  OrderCurrency = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 3:
+                if (field.Type == TType.String) {
+                  ClientToken = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 4:
+                if (field.Type == TType.String) {
+                  OrderDescription = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 5:
+                if (field.Type == TType.String) {
+                  Uuid = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("makePaymentEvent_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (TotalPrice != null) {
+            field.Name = "totalPrice";
+            field.Type = TType.I32;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(TotalPrice.Value);
+            oprot.WriteFieldEnd();
+          }
+          if (OrderCurrency != null) {
+            field.Name = "orderCurrency";
+            field.Type = TType.String;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(OrderCurrency);
+            oprot.WriteFieldEnd();
+          }
+          if (ClientToken != null) {
+            field.Name = "clientToken";
+            field.Type = TType.String;
+            field.ID = 3;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(ClientToken);
+            oprot.WriteFieldEnd();
+          }
+          if (OrderDescription != null) {
+            field.Name = "orderDescription";
+            field.Type = TType.String;
+            field.ID = 4;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(OrderDescription);
+            oprot.WriteFieldEnd();
+          }
+          if (Uuid != null) {
+            field.Name = "uuid";
+            field.Type = TType.String;
+            field.ID = 5;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(Uuid);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("makePaymentEvent_args(");
+        bool __first = true;
+        if (TotalPrice != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("TotalPrice: ");
+          __sb.Append(TotalPrice);
+        }
+        if (OrderCurrency != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("OrderCurrency: ");
+          __sb.Append(OrderCurrency);
+        }
+        if (ClientToken != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("ClientToken: ");
+          __sb.Append(ClientToken);
+        }
+        if (OrderDescription != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("OrderDescription: ");
+          __sb.Append(OrderDescription);
+        }
+        if (Uuid != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Uuid: ");
+          __sb.Append(Uuid);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class makePaymentEvent_result : TBase
+    {
+
+      public makePaymentEvent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("makePaymentEvent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("makePaymentEvent_result(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class serviceDiscoveryEvent_args : TBase
+    {
+
+      public string RemoteAddr { get; set; }
+
+      public serviceDiscoveryEvent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.String) {
+                  RemoteAddr = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("serviceDiscoveryEvent_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (RemoteAddr != null) {
+            field.Name = "remoteAddr";
+            field.Type = TType.String;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(RemoteAddr);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("serviceDiscoveryEvent_args(");
+        bool __first = true;
+        if (RemoteAddr != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("RemoteAddr: ");
+          __sb.Append(RemoteAddr);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class serviceDiscoveryEvent_result : TBase
+    {
+
+      public serviceDiscoveryEvent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("serviceDiscoveryEvent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("serviceDiscoveryEvent_result(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class servicePricesEvent_args : TBase
+    {
+
+      public string RemoteAddr { get; set; }
+
+      public int? ServiceId { get; set; }
+
+      public servicePricesEvent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.String) {
+                  RemoteAddr = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 2:
+                if (field.Type == TType.I32) {
+                  ServiceId = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("servicePricesEvent_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (RemoteAddr != null) {
+            field.Name = "remoteAddr";
+            field.Type = TType.String;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(RemoteAddr);
+            oprot.WriteFieldEnd();
+          }
+          if (ServiceId != null) {
+            field.Name = "serviceId";
+            field.Type = TType.I32;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(ServiceId.Value);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("servicePricesEvent_args(");
+        bool __first = true;
+        if (RemoteAddr != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("RemoteAddr: ");
+          __sb.Append(RemoteAddr);
+        }
+        if (ServiceId != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("ServiceId: ");
+          __sb.Append(ServiceId);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class servicePricesEvent_result : TBase
+    {
+
+      public servicePricesEvent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("servicePricesEvent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("servicePricesEvent_result(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class serviceTotalPriceEvent_args : TBase
+    {
+
+      public string RemoteAddr { get; set; }
+
+      public int? ServiceID { get; set; }
+
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse TotalPriceResp { get; set; }
+
+      public serviceTotalPriceEvent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.String) {
+                  RemoteAddr = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 2:
+                if (field.Type == TType.I32) {
+                  ServiceID = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 3:
+                if (field.Type == TType.Struct) {
+                  TotalPriceResp = new Worldpay.Within.Rpc.Types.TotalPriceResponse();
+                  TotalPriceResp.Read(iprot);
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("serviceTotalPriceEvent_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (RemoteAddr != null) {
+            field.Name = "remoteAddr";
+            field.Type = TType.String;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(RemoteAddr);
+            oprot.WriteFieldEnd();
+          }
+          if (ServiceID != null) {
+            field.Name = "serviceID";
+            field.Type = TType.I32;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(ServiceID.Value);
+            oprot.WriteFieldEnd();
+          }
+          if (TotalPriceResp != null) {
+            field.Name = "totalPriceResp";
+            field.Type = TType.Struct;
+            field.ID = 3;
+            oprot.WriteFieldBegin(field);
+            TotalPriceResp.Write(oprot);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("serviceTotalPriceEvent_args(");
+        bool __first = true;
+        if (RemoteAddr != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("RemoteAddr: ");
+          __sb.Append(RemoteAddr);
+        }
+        if (ServiceID != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("ServiceID: ");
+          __sb.Append(ServiceID);
+        }
+        if (TotalPriceResp != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("TotalPriceResp: ");
+          __sb.Append(TotalPriceResp== null ? "<null>" : TotalPriceResp.ToString());
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class serviceTotalPriceEvent_result : TBase
+    {
+
+      public serviceTotalPriceEvent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("serviceTotalPriceEvent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("serviceTotalPriceEvent_result(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class errorEvent_args : TBase
+    {
+
+      public string Msg { get; set; }
+
+      public errorEvent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.String) {
+                  Msg = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("errorEvent_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (Msg != null) {
+            field.Name = "msg";
+            field.Type = TType.String;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(Msg);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("errorEvent_args(");
+        bool __first = true;
+        if (Msg != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Msg: ");
+          __sb.Append(Msg);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class errorEvent_result : TBase
+    {
+
+      public errorEvent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("errorEvent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("errorEvent_result(");
         __sb.Append(")");
         return __sb.ToString();
       }
