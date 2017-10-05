@@ -32,10 +32,11 @@ namespace Worldpay.Within
         ///     Delegate used for registering handlers for the <see cref="WPWithinService.OnBeginServiceDelivery" /> event.
         /// </summary>
         /// <param name="serviceId">The identity of the service that has begun delivering its service.</param>
+        /// <param name="servicePriceID">The identity of the service price that has begun delivering.</param>
         /// <param name="serviceDeliveryToken">A token that can be validated to ensure that origin of the event is genuine.</param>
         /// <param name="unitsToSupply">The number of units that will be supplied.</param>
         public delegate void BeginServiceDeliveryHandler(
-            int serviceId, ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+            int serviceId, int servicePriceID, ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
 
         /// <summary>
         ///     Delegate used for registering handlers for the <see cref="WPWithinService.OnEndServiceDelivery" /> event.
@@ -45,6 +46,45 @@ namespace Worldpay.Within
         /// <param name="unitsReceived">The number of units that have been supplied.</param>
         public delegate void EndServiceDeliveryHandler(
             int serviceId, ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+
+        /// <summary>
+        /// Delegate used for registering handlers for the <see cref="WPWithinService.OnMakePaymentEvent" /> event.
+        /// </summary>
+        /// <param name="totalPrice">Total price.</param>
+        /// <param name="orderCurrency">Currency of the order.</param>
+        /// <param name="clientToken">Client token.</param>
+        /// <param name="orderDescription">Description of the order.</param>
+        /// <param name="uuid">UUID of client.</param>
+        public delegate void MakePaymentEventHandler(
+            int totalPrice, string orderCurrency, string clientToken, string orderDescription, string uuid);
+
+        /// <summary>
+        /// Delegate used for registering handlers for the <see cref="WPWithinService.OnServiceDiscovery" /> event.
+        /// </summary>
+        /// <param name="remoteAddr">Remote address of consumer.</param>
+        public delegate void ServiceDiscoveryEventHandler(string remoteAddr);
+
+        /// <summary>
+        /// Delegate used for registering handlers for the <see cref="WPWithinService.OnServicePrices" /> event.
+        /// </summary>
+        /// <param name="remoteAddr">Remote address of consumer.</param>
+        /// <param name="serviceId">The identity of the service that has completed delivering its service.</param>
+        public delegate void ServicePricesEventHandler(string remoteAddr, int serviceId);
+
+        /// <summary>
+        /// Delegate used for registering handlers for the <see cref="WPWithinService.OnServiceTotalPriceEvent" /> event.
+        /// </summary>
+        /// <param name="remoteAddr">Remote address of consumer.</param>
+        /// <param name="serviceID">The identity of the service that has completed delivering its service.</param>
+        /// <param name="totalPriceResp"></param>
+        public delegate void ServiceTotalPriceEventHandler(string remoteAddr, int serviceID, Within.TotalPriceResponse totalPriceResp);
+
+        /// <summary>
+        /// Delegate used for registering handlers for the <see cref="WPWithinService.OnErrorEvent" /> event.
+        /// </summary>
+        /// <param name="msg">Error message.</param>
+        public delegate void ErrorEventHandler(string msg);
+
 
         private static readonly ILog Log = LogManager.GetLogger<WPWithinService>();
 
@@ -134,6 +174,77 @@ namespace Worldpay.Within
             add { _listener.EndServiceDelivery += value; }
             remove { _listener.EndServiceDelivery -= value; }
         }
+
+        /// <summary>
+        ///     Event raised (for producer) when MakePayment is issued.
+        /// </summary>
+        /// <remarks>
+        ///     This event will only be raised if <see cref="RpcAgentConfiguration.CallbackPort" /> has been set, which causes the
+        ///     Thrift RPC Agent to set up a callback
+        ///     mechanism.
+        /// </remarks>
+        public event MakePaymentEventHandler OnMakePaymentEvent
+        {
+            add { _listener.MakePaymentEvent += value; }
+            remove { _listener.MakePaymentEvent -= value; }
+        }
+
+        /// <summary>
+        ///     Event raised (for producer) when ServiceDiscovery is issued.
+        /// </summary>
+        /// <remarks>
+        ///     This event will only be raised if <see cref="RpcAgentConfiguration.CallbackPort" /> has been set, which causes the
+        ///     Thrift RPC Agent to set up a callback
+        ///     mechanism.
+        /// </remarks>
+        public event ServiceDiscoveryEventHandler ServiceDiscoveryEvent
+        {
+            add { _listener.ServiceDiscoveryEvent += value; }
+            remove { _listener.ServiceDiscoveryEvent -= value; }
+        }
+
+        /// <summary>
+        ///     Event raised (for producer) when ServicePrices is issued.
+        /// </summary>
+        /// <remarks>
+        ///     This event will only be raised if <see cref="RpcAgentConfiguration.CallbackPort" /> has been set, which causes the
+        ///     Thrift RPC Agent to set up a callback
+        ///     mechanism.
+        /// </remarks>
+        public event ServicePricesEventHandler OnServicePricesEvent
+        {
+            add { _listener.ServicePricesEvent += value; }
+            remove { _listener.ServicePricesEvent -= value; }
+        }
+
+        /// <summary>
+        ///      Event raised (for producer) when ServiceTotalPrice is issued.
+        /// </summary>
+        /// <remarks>
+        ///     This event will only be raised if <see cref="RpcAgentConfiguration.CallbackPort" /> has been set, which causes the
+        ///     Thrift RPC Agent to set up a callback
+        ///     mechanism.
+        /// </remarks>
+        public event ServiceTotalPriceEventHandler OnServiceTotalPriceEvent
+        {
+            add { _listener.ServiceTotalPriceEvent += value; }
+            remove { _listener.ServiceTotalPriceEvent -= value; }
+        }
+
+        /// <summary>
+        ///     Event raised when Error is issued from SDK.
+        /// </summary>
+        /// <remarks>
+        ///     This event will only be raised if <see cref="RpcAgentConfiguration.CallbackPort" /> has been set, which causes the
+        ///     Thrift RPC Agent to set up a callback
+        ///     mechanism.
+        /// </remarks>
+        public event ErrorEventHandler OnErrorEvent
+        {
+            add { _listener.ErrorEvent += value; }
+            remove { _listener.ErrorEvent -= value; }
+        }
+
 
         /// <summary>
         ///     Adds a new service to those offered by this producer.
