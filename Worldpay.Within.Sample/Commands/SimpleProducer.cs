@@ -140,6 +140,14 @@ namespace Worldpay.Within.Sample.Commands
         /// </summary>
         public void Stop()
         {
+            // Unregister SDK callbacks.
+            _service.OnBeginServiceDelivery -= _service_OnBeginServiceDelivery;
+            _service.OnEndServiceDelivery -= _service_OnEndServiceDelivery;
+            _service.OnMakePaymentEvent -= _service_OnMakePaymentEvent;
+            _service.OnServicePricesEvent -= _service_OnServicePricesEvent;
+            _service.OnServiceTotalPriceEvent -= _service_OnServiceTotalPriceEvent;
+            _service.OnErrorEvent -= _service_OnErrorEvent;
+
             _output.WriteLine("Stopping service broadcast");
             _service?.StopServiceBroadcast();
             _output.WriteLine("Waiting for producer task to complete, max 250ms");
