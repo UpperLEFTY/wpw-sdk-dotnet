@@ -7,6 +7,8 @@ using Common.Logging;
 using Worldpay.Within.ThriftAdapters;
 using Worldpay.Within.AgentManager;
 using System.Threading;
+using Worldpay.Within.Sample.Properties;
+using Newtonsoft.Json;
 
 namespace Worldpay.Within.Sample.Commands
 {
@@ -47,8 +49,9 @@ namespace Worldpay.Within.Sample.Commands
         {
             _output.WriteLine("WorldpayWithin Sample Producer...");
             _service.SetupDevice(".NET Producer Example", $"Example WorldpayWithin producer running on {Dns.GetHostName()}");
-            _rpcManager?.StartThriftRpcAgentProcess();
-            Thread.Sleep(750);
+            //_rpcManager?.StartThriftRpcAgentProcess();
+            //Thread.Sleep(750);
+
             /*
              * Creates a simple electric car charging service, that offers a price to deliver 1 kWh of electricy for £25.
              */
@@ -81,6 +84,23 @@ namespace Worldpay.Within.Sample.Commands
                 MerchantClientKey = "T_C_03eaa1d3-4642-4079-b030-b543ee04b5af",
                 MerchantServiceKey = "T_S_f50ecb46-ca82-44a7-9c40-421818af5996"
             };
+
+            // overwrite configuration if defined
+            var cfgFile = Resources.ProducerConfig;
+
+            // overwrite config if exists
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+                config = cfg.pspConfig;
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+            }
+
+
             _service.InitProducer(config);
 
             Log.Info("Starting service broadcast");

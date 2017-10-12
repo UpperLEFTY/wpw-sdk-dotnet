@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using Worldpay.Within.AgentManager;
+using Worldpay.Within.Sample.Properties;
 using Worldpay.Within.ThriftAdapters;
 
 namespace Worldpay.Within.Sample.Commands
@@ -136,7 +138,29 @@ namespace Worldpay.Within.Sample.Commands
                 LogFile = new FileInfo("rpc-within-consumer.log"),
                 ServicePort = 9096,
             };
+
+            // overwrite configuration if defined
+            var cfgFile = Resources.ConsumerConfig;
+
+            // overwrite host and port if exists
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+                consumerConfig.ServiceHost = cfg.host;
+                consumerConfig.ServicePort = cfg.port.Value;
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+            }
+
+            
+
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
+
+            _error.WriteLine("************************************************ " + consumerConfig.ServicePort + " *********************************");
+
             consumerAgent.StartThriftRpcAgentProcess();
             // do we need to wait a little to allow RPC Agent to start ?
             // Thread.Sleep(250);
@@ -175,6 +199,23 @@ namespace Worldpay.Within.Sample.Commands
                 LogLevel = "panic,fatal,error,warn,info,debug",
                 LogFile = new FileInfo("rpc-within-producer.log"),
             };
+
+            // overwrite configuration if defined
+            var cfgFile = Resources.ProducerConfig;
+
+            // overwrite host and port if exists
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+                rpcAgentConf.ServiceHost = cfg.host;
+                rpcAgentConf.ServicePort = cfg.port.Value;
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+            }
+
             RpcAgentManager rpcAgentMgr = new RpcAgentManager(rpcAgentConf);
             rpcAgentMgr.StartThriftRpcAgentProcess();
             Thread.Sleep(750);

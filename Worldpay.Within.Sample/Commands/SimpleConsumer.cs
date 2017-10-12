@@ -6,7 +6,9 @@ using System.Threading;
 
 using Worldpay.Within.ThriftAdapters;
 using Worldpay.Within.AgentManager;
-
+using Newtonsoft.Json;
+using System;
+using Worldpay.Within.Sample.Properties;
 
 namespace Worldpay.Within.Sample.Commands
 {
@@ -119,9 +121,28 @@ namespace Worldpay.Within.Sample.Commands
         /// <param name="svcMsg">A description of the service (device) offered that we want to connect to.</param>
         private void ConnectToDevice(WPWithinService service, ServiceMessage svcMsg)
         {
-            HceCard card = new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113");
+            var cfgFile = Resources.ConsumerConfig;
+            
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                throw;
+                
+                //// failed to read config data from file, use dafaults
+                //cfg = new Config
+                //{
+                //    hceCard = new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113"),
+                //    pspConfig = new PspConfig()
+                //};
+            }
+
             service.InitConsumer("http://", svcMsg.Hostname, svcMsg.PortNumber ?? 80, svcMsg.UrlPrefix, svcMsg.ServerId,
-                card, new PspConfig());
+                cfg.hceCard, cfg.pspConfig);
         }
 
         /// <summary>
@@ -284,7 +305,8 @@ namespace Worldpay.Within.Sample.Commands
             try
             {
                 _service?.CloseRPCAgent();
-            } catch { }
+            }
+            catch { }
             // additionaly try to stop the agent if it's still alive
             _rpcManager.StopThriftRpcAgentProcess();
             _rpcManager = null;

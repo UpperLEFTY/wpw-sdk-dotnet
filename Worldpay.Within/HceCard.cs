@@ -1,10 +1,12 @@
 ﻿using Worldpay.Within.Utils;
+using Newtonsoft.Json;
 
 namespace Worldpay.Within
 {
     /// <summary>
     /// Represents a Hosted Card Emulator, a payment instrument, such as a credit card, than can be used to purchase services from a producer.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class HceCard
     {
 
@@ -35,37 +37,44 @@ namespace Worldpay.Within
         /// <summary>
         /// The first name that appears on the card.
         /// </summary>
+        [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; }
 
         /// <summary>
         /// The last name that appears on the card.
         /// </summary>
+        [JsonProperty(PropertyName = "lastName")]
         public string LastName { get; }
 
         /// <summary>
         /// The expiry month on the card.  <code>1</code> = January, <code>12</code> = December.
         /// </summary>
+        [JsonProperty(PropertyName = "expMonth", NullValueHandling = NullValueHandling.Ignore)]
         public int? ExpMonth { get; }
 
         /// <summary>
         /// The expiry year on the card, for example <code>2018</code>.
         /// </summary>
+        [JsonProperty(PropertyName = "expYear", NullValueHandling = NullValueHandling.Ignore)]
         public int? ExpYear { get; }
 
         /// <summary>
         /// The long card number, may include spaces.  E.g. <code>4444 3333 2222 1111</code>.
         /// </summary>
+        [JsonProperty(PropertyName = "cardNumber")]
         public string CardNumber { get; }
 
         /// <summary>
         /// The type of payment instrument, this should always be <code>Card</code>, responses from the producer would t ypically be <code>ObfuscatedCard</code> (where
         /// all but the last 4 digits are represented by asterisks).
         /// </summary>
+        [JsonProperty(PropertyName = "type")]
         public string Type { get; }
 
         /// <summary>
         /// Card Verification Code, required for card not present transactions.
         /// </summary>
+        [JsonProperty(PropertyName = "cvc", NullValueHandling = NullValueHandling.Ignore)]
         public string Cvc { get; }
 
         /// <summary>
