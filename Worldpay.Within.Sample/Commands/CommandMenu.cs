@@ -155,12 +155,7 @@ namespace Worldpay.Within.Sample.Commands
                 _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
             }
 
-            
-
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
-
-            _error.WriteLine("************************************************ " + consumerConfig.ServicePort + " *********************************");
-
             consumerAgent.StartThriftRpcAgentProcess();
             // do we need to wait a little to allow RPC Agent to start ?
             // Thread.Sleep(250);
