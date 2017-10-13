@@ -11,14 +11,7 @@
 		"cvc": "113"
 	},
 	"pspConfig": {
-		// Worldpay Online Payments
 		"psp_name": "worldpayonlinepayments",
 		"api_endpoint": "https://api.worldpay.com/v1"
-
-		// Worldpay Total US / SecureNet
-		// "PSP_NAME": "securenet",
-		// "API_ENDPOINT": "https://gwapi.demo.securenet.com/api",
-		// "APP_VERSION": "0.1",
-		// "DEVELOPER_ID": "12345678",
 	}
 }

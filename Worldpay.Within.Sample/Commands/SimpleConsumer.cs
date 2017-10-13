@@ -133,7 +133,6 @@ namespace Worldpay.Within.Sample.Commands
                 _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
                 throw;
                 
-                //// failed to read config data from file, use dafaults
                 //cfg = new Config
                 //{
                 //    hceCard = new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113"),

@@ -94,8 +94,6 @@
     <AdditionalFiles Include="config\consumer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
-    <None Include="Properties\consumer.json" />
-    <None Include="Properties\producer.json" />
     <Content Include="config\producer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

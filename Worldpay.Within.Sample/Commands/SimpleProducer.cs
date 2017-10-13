@@ -77,13 +77,7 @@ namespace Worldpay.Within.Sample.Commands
 
             /* Initialises the producer (but doesn't start it yet) with the service and client keys for the Worldpay Online Payments service.
              */
-            PspConfig config = new PspConfig
-            {
-                HtePublicKey = "T_C_03eaa1d3-4642-4079-b030-b543ee04b5af",
-                HtePrivateKey = "T_S_f50ecb46-ca82-44a7-9c40-421818af5996",
-                MerchantClientKey = "T_C_03eaa1d3-4642-4079-b030-b543ee04b5af",
-                MerchantServiceKey = "T_S_f50ecb46-ca82-44a7-9c40-421818af5996"
-            };
+            PspConfig config = new PspConfig();
 
             // overwrite configuration if defined
             var cfgFile = Resources.ProducerConfig;
@@ -98,8 +92,8 @@ namespace Worldpay.Within.Sample.Commands
             catch (JsonException je)
             {
                 _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                throw;
             }
-
 
             _service.InitProducer(config);
 

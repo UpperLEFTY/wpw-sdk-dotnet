@@ -153,6 +153,7 @@ namespace Worldpay.Within.Sample.Commands
             catch (JsonException je)
             {
                 _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                throw;
             }
 
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
