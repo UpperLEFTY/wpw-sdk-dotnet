@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Worldpay.Within.ThriftAdapters;
 
 namespace Worldpay.Within.Sample
 {
     /// <summary>
-    /// Config class defining host, port, hceCard & pspConfig. The object is serializable to JSON.
+    /// Config class defining host, port, hceCard and pspConfig. The object is serializable to JSON.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     class Config

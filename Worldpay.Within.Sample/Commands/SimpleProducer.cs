@@ -49,8 +49,6 @@ namespace Worldpay.Within.Sample.Commands
         {
             _output.WriteLine("WorldpayWithin Sample Producer...");
             _service.SetupDevice(".NET Producer Example", $"Example WorldpayWithin producer running on {Dns.GetHostName()}");
-            //_rpcManager?.StartThriftRpcAgentProcess();
-            //Thread.Sleep(750);
 
             /*
              * Creates a simple electric car charging service, that offers a price to deliver 1 kWh of electricy for £25.

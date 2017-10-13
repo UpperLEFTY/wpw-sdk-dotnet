@@ -152,7 +152,7 @@ namespace Worldpay.Within.Sample.Commands
             }
             catch (JsonException je)
             {
-                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                _error.WriteLine("Failed to read/deserialize configuration from {0}: {1}", cfgFile, je.Message);
                 throw;
             }
 
@@ -209,7 +209,7 @@ namespace Worldpay.Within.Sample.Commands
             }
             catch (JsonException je)
             {
-                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                _error.WriteLine("Failed to read/deserialize configuration from {0}: {1}", cfgFile, je.Message);
             }
 
             RpcAgentManager rpcAgentMgr = new RpcAgentManager(rpcAgentConf);
