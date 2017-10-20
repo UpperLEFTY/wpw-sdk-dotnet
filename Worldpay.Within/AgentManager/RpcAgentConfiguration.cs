@@ -188,7 +188,7 @@ namespace Worldpay.Within.AgentManager
                 string agentFilename = RpcAgentFilenameGenerator.GetForCurrent();
                 Log.Info("Searching for " + agentFilename);
 
-                _rpcAgentPath = LookForRpcAgentIn(string.Join("iot-core-component", System.IO.Path.DirectorySeparatorChar, "bin")) ??
+                _rpcAgentPath = LookForRpcAgentIn(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), new string[] { "iot-core-component", "bin" } )) ??
                                 LookForRpcAgentIn(GetPathFromApplicationConfig()) ??
                                 LookForRpcAgentIn(GetPathFromEnvironment());
 
@@ -306,11 +306,10 @@ namespace Worldpay.Within.AgentManager
             {
                 return null;
             }
+            string[] path2join = new string[] { GetParentPath(3), dirToLookIn, RpcAgentFilenameGenerator.GetForCurrent() };
+            string path = string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), path2join);
             FileInfo fi =
-                new FileInfo(string.Join(
-                    GetParentPath(3), 
-                    dirToLookIn, 
-                    RpcAgentFilenameGenerator.GetForCurrent()));
+                new FileInfo(path);
             return DoesFileExist(fi) ? fi.FullName : null;
         }
 
@@ -332,12 +331,12 @@ namespace Worldpay.Within.AgentManager
         private string GetParentPath(int levelsUp)
         {
             string currentDir = Directory.GetCurrentDirectory().ToString();
-            for (int i=0;i<levelsUp;i++)
+            for (int i = 0; i < levelsUp; i++)
             {
                 currentDir =  Directory.GetParent(currentDir).ToString();
                 
             }
-            return string.Join(currentDir, System.IO.Path.DirectorySeparatorChar);
+            return currentDir;
         }
 
         private string GetPathFromEnvironment()
