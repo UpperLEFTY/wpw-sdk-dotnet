@@ -328,6 +328,18 @@ namespace Worldpay.Within
             }
         }
 
+        public ServiceMessage SearchForDevice(int timeoutMillis, string deviceName)
+        {
+            try
+            {
+                return ServiceMessageAdapter.Create(_client.searchForDevice(timeoutMillis, deviceName));
+            }
+            catch (TApplicationException tae)
+            {
+                throw new WPWithinException(tae);
+            }
+        }
+
         public IEnumerable<ServiceDetails> RequestServices()
         {
             try

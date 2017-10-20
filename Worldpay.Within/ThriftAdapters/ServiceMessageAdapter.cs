@@ -7,12 +7,12 @@ namespace Worldpay.Within.ThriftAdapters
 {
     internal class ServiceMessageAdapter
     {
-        public static IEnumerable<ServiceMessage> Create(THashSet<Within.Rpc.Types.ServiceMessage> deviceDiscovery)
+        public static IEnumerable<ServiceMessage> Create(THashSet<ThriftServiceMessage> deviceDiscovery)
         {
             return deviceDiscovery.Select(Create);
         }
 
-        private static ServiceMessage Create(ThriftServiceMessage sm)
+        public static ServiceMessage Create(ThriftServiceMessage sm)
         {
             return new ServiceMessage(sm.ServerId, sm.UrlPrefix, sm.PortNumber, sm.Hostname, sm.DeviceDescription);
         }

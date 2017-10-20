@@ -31,6 +31,7 @@ namespace Worldpay.Within.Rpc
       void startServiceBroadcast(int timeoutMillis);
       void stopServiceBroadcast();
       THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> deviceDiscovery(int timeoutMillis);
+      Worldpay.Within.Rpc.Types.ServiceMessage searchForDevice(int timeoutMillis, string deviceName);
       THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> requestServices();
       THashSet<Worldpay.Within.Rpc.Types.Price> getServicePrices(int serviceId);
       Worldpay.Within.Rpc.Types.TotalPriceResponse selectService(int serviceId, int numberOfUnits, int priceId);
@@ -79,6 +80,10 @@ namespace Worldpay.Within.Rpc
       #if SILVERLIGHT
       IAsyncResult Begin_deviceDiscovery(AsyncCallback callback, object state, int timeoutMillis);
       THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> End_deviceDiscovery(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName);
+      Worldpay.Within.Rpc.Types.ServiceMessage End_searchForDevice(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_requestServices(AsyncCallback callback, object state);
@@ -737,6 +742,72 @@ namespace Worldpay.Within.Rpc
 
       
       #if SILVERLIGHT
+      public IAsyncResult Begin_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName)
+      {
+        return send_searchForDevice(callback, state, timeoutMillis, deviceName);
+      }
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage End_searchForDevice(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        return recv_searchForDevice();
+      }
+
+      #endif
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage searchForDevice(int timeoutMillis, string deviceName)
+      {
+        #if !SILVERLIGHT
+        send_searchForDevice(timeoutMillis, deviceName);
+        return recv_searchForDevice();
+
+        #else
+        var asyncResult = Begin_searchForDevice(null, null, timeoutMillis, deviceName);
+        return End_searchForDevice(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName)
+      #else
+      public void send_searchForDevice(int timeoutMillis, string deviceName)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Call, seqid_));
+        searchForDevice_args args = new searchForDevice_args();
+        args.TimeoutMillis = timeoutMillis;
+        args.DeviceName = deviceName;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage recv_searchForDevice()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        searchForDevice_result result = new searchForDevice_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        if (result.Success != null) {
+          return result.Success;
+        }
+        if (result.Err != null) {
+          throw result.Err;
+        }
+        throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "searchForDevice failed: unknown result");
+      }
+
+      
+      #if SILVERLIGHT
       public IAsyncResult Begin_requestServices(AsyncCallback callback, object state)
       {
         return send_requestServices(callback, state);
@@ -1202,6 +1273,7 @@ namespace Worldpay.Within.Rpc
         processMap_["startServiceBroadcast"] = startServiceBroadcast_Process;
         processMap_["stopServiceBroadcast"] = stopServiceBroadcast_Process;
         processMap_["deviceDiscovery"] = deviceDiscovery_Process;
+        processMap_["searchForDevice"] = searchForDevice_Process;
         processMap_["requestServices"] = requestServices_Process;
         processMap_["getServicePrices"] = getServicePrices_Process;
         processMap_["selectService"] = selectService_Process;
@@ -1543,6 +1615,41 @@ namespace Worldpay.Within.Rpc
           Console.Error.WriteLine(ex.ToString());
           TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
           oprot.WriteMessageBegin(new TMessage("deviceDiscovery", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void searchForDevice_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        searchForDevice_args args = new searchForDevice_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        searchForDevice_result result = new searchForDevice_result();
+        try
+        {
+          try
+          {
+            result.Success = iface_.searchForDevice(args.TimeoutMillis.Value, args.DeviceName);
+          }
+          catch (Worldpay.Within.Rpc.Types.Error err)
+          {
+            result.Err = err;
+          }
+          oprot.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Exception, seqid));
           x.Write(oprot);
         }
         oprot.WriteMessageEnd();
@@ -3554,6 +3661,228 @@ namespace Worldpay.Within.Rpc
           __first = false;
           __sb.Append("Success: ");
           __sb.Append(Success);
+        }
+        if (Err != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Err: ");
+          __sb.Append(Err== null ? "<null>" : Err.ToString());
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class searchForDevice_args : TBase
+    {
+
+      public int? TimeoutMillis { get; set; }
+
+      public string DeviceName { get; set; }
+
+      public searchForDevice_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.I32) {
+                  TimeoutMillis = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 2:
+                if (field.Type == TType.String) {
+                  DeviceName = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("searchForDevice_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (TimeoutMillis != null) {
+            field.Name = "timeoutMillis";
+            field.Type = TType.I32;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(TimeoutMillis.Value);
+            oprot.WriteFieldEnd();
+          }
+          if (DeviceName != null) {
+            field.Name = "deviceName";
+            field.Type = TType.String;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(DeviceName);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("searchForDevice_args(");
+        bool __first = true;
+        if (TimeoutMillis != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("TimeoutMillis: ");
+          __sb.Append(TimeoutMillis);
+        }
+        if (DeviceName != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("DeviceName: ");
+          __sb.Append(DeviceName);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class searchForDevice_result : TBase
+    {
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage Success { get; set; }
+
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
+
+      public searchForDevice_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 0:
+                if (field.Type == TType.Struct) {
+                  Success = new Worldpay.Within.Rpc.Types.ServiceMessage();
+                  Success.Read(iprot);
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 1:
+                if (field.Type == TType.Struct) {
+                  Err = new Worldpay.Within.Rpc.Types.Error();
+                  Err.Read(iprot);
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("searchForDevice_result");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+
+          if (this.Success != null) {
+            field.Name = "Success";
+            field.Type = TType.Struct;
+            field.ID = 0;
+            oprot.WriteFieldBegin(field);
+            Success.Write(oprot);
+            oprot.WriteFieldEnd();
+          } else if (this.Err != null) {
+            field.Name = "Err";
+            field.Type = TType.Struct;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            Err.Write(oprot);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("searchForDevice_result(");
+        bool __first = true;
+        if (Success != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Success: ");
+          __sb.Append(Success== null ? "<null>" : Success.ToString());
         }
         if (Err != null) {
           if(!__first) { __sb.Append(", "); }

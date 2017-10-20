@@ -28,6 +28,15 @@ namespace Worldpay.Within.Sample
         }
 
         /// <summary>
+        /// Id of the producent to search for.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string producentIdForSearch
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// HCE card definition.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
