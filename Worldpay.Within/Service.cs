@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
-using Worldpay.Innovation.WPWithin.Utils;
+using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin
+namespace Worldpay.Within
 {
     public class Service
     {
-        public int? Id { get; set; }
+
+        public Service(int? id)
+        {
+            this.Id = id;
+        }
+
+        public int? Id { get; }
 
         public string Name { get; set; }
 
@@ -16,8 +22,6 @@ namespace Worldpay.Innovation.WPWithin
         public override int GetHashCode()
         {
             return new HashCodeBuilder<Service>(this).With(m => m.Id)
-                .With(m => m.Name)
-                .With(m => m.Description)
                 .HashCode;
         }
 

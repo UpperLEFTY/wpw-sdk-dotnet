@@ -1,0 +1,17 @@
+{
+	"host": "127.0.0.1",
+	"port": 9096,
+	"hceCard": {
+		"firstName": "Bilbo",
+		"lastName": "Baggins",
+		"expMonth": 11,
+		"expYear": 2018,
+		"cardNumber": "5555555555554444",
+		"type": "Card",
+		"cvc": "113"
+	},
+	"pspConfig": {
+		"psp_name": "worldpayonlinepayments",
+		"api_endpoint": "https://api.worldpay.com/v1"
+	}
+}

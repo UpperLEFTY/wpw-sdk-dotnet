@@ -15,22 +15,26 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc.Types
+namespace Worldpay.Within.Rpc.Types
 {
 
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class ServiceDetails : TBase
+  public partial class Price : TBase
   {
 
-    public int? ServiceId { get; set; }
+    public int? Id { get; set; }
 
-    public string ServiceDescription { get; set; }
+    public string Description { get; set; }
 
-    public string ServiceName { get; set; }
+    public PricePerUnit PricePerUnit { get; set; }
 
-    public ServiceDetails() {
+    public int? UnitId { get; set; }
+
+    public string UnitDescription { get; set; }
+
+    public Price() {
     }
 
     public void Read (TProtocol iprot)
@@ -50,21 +54,36 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
           {
             case 1:
               if (field.Type == TType.I32) {
-                ServiceId = iprot.ReadI32();
+                Id = iprot.ReadI32();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 2:
               if (field.Type == TType.String) {
-                ServiceDescription = iprot.ReadString();
+                Description = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 3:
+              if (field.Type == TType.Struct) {
+                PricePerUnit = new PricePerUnit();
+                PricePerUnit.Read(iprot);
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 4:
+              if (field.Type == TType.I32) {
+                UnitId = iprot.ReadI32();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 5:
               if (field.Type == TType.String) {
-                ServiceName = iprot.ReadString();
+                UnitDescription = iprot.ReadString();
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -87,31 +106,47 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("ServiceDetails");
+        TStruct struc = new TStruct("Price");
         oprot.WriteStructBegin(struc);
         TField field = new TField();
-        if (ServiceId != null) {
-          field.Name = "serviceId";
+        if (Id != null) {
+          field.Name = "id";
           field.Type = TType.I32;
           field.ID = 1;
           oprot.WriteFieldBegin(field);
-          oprot.WriteI32(ServiceId.Value);
+          oprot.WriteI32(Id.Value);
           oprot.WriteFieldEnd();
         }
-        if (ServiceDescription != null) {
-          field.Name = "serviceDescription";
+        if (Description != null) {
+          field.Name = "description";
           field.Type = TType.String;
           field.ID = 2;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ServiceDescription);
+          oprot.WriteString(Description);
           oprot.WriteFieldEnd();
         }
-        if (ServiceName != null) {
-          field.Name = "serviceName";
-          field.Type = TType.String;
+        if (PricePerUnit != null) {
+          field.Name = "pricePerUnit";
+          field.Type = TType.Struct;
           field.ID = 3;
           oprot.WriteFieldBegin(field);
-          oprot.WriteString(ServiceName);
+          PricePerUnit.Write(oprot);
+          oprot.WriteFieldEnd();
+        }
+        if (UnitId != null) {
+          field.Name = "unitId";
+          field.Type = TType.I32;
+          field.ID = 4;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteI32(UnitId.Value);
+          oprot.WriteFieldEnd();
+        }
+        if (UnitDescription != null) {
+          field.Name = "unitDescription";
+          field.Type = TType.String;
+          field.ID = 5;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteString(UnitDescription);
           oprot.WriteFieldEnd();
         }
         oprot.WriteFieldStop();
@@ -124,25 +159,37 @@ namespace Worldpay.Innovation.WPWithin.Rpc.Types
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("ServiceDetails(");
+      StringBuilder __sb = new StringBuilder("Price(");
       bool __first = true;
-      if (ServiceId != null) {
+      if (Id != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceId: ");
-        __sb.Append(ServiceId);
+        __sb.Append("Id: ");
+        __sb.Append(Id);
       }
-      if (ServiceDescription != null) {
+      if (Description != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceDescription: ");
-        __sb.Append(ServiceDescription);
+        __sb.Append("Description: ");
+        __sb.Append(Description);
       }
-      if (ServiceName != null) {
+      if (PricePerUnit != null) {
         if(!__first) { __sb.Append(", "); }
         __first = false;
-        __sb.Append("ServiceName: ");
-        __sb.Append(ServiceName);
+        __sb.Append("PricePerUnit: ");
+        __sb.Append(PricePerUnit== null ? "<null>" : PricePerUnit.ToString());
+      }
+      if (UnitId != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("UnitId: ");
+        __sb.Append(UnitId);
+      }
+      if (UnitDescription != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("UnitDescription: ");
+        __sb.Append(UnitDescription);
       }
       __sb.Append(")");
       return __sb.ToString();

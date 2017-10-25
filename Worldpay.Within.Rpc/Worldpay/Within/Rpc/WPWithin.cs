@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Worldpay.Innovation.WPWithin.Rpc
+namespace Worldpay.Within.Rpc
 {
   public partial class WPWithin {
     /// <summary>
@@ -23,20 +23,22 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     /// </summary>
     public interface ISync {
       void setup(string name, string description);
-      void addService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc);
-      void removeService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc);
-      void initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig);
+      void addService(Worldpay.Within.Rpc.Types.Service svc);
+      void removeService(Worldpay.Within.Rpc.Types.Service svc);
+      void initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig);
       void initProducer(Dictionary<string, string> pspConfig);
-      Worldpay.Innovation.WPWithin.Rpc.Types.Device getDevice();
+      Worldpay.Within.Rpc.Types.Device getDevice();
       void startServiceBroadcast(int timeoutMillis);
       void stopServiceBroadcast();
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> deviceDiscovery(int timeoutMillis);
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> requestServices();
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> getServicePrices(int serviceId);
-      Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse selectService(int serviceId, int numberOfUnits, int priceId);
-      Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse makePayment(Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request);
-      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
-      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> deviceDiscovery(int timeoutMillis);
+      Worldpay.Within.Rpc.Types.ServiceMessage searchForDevice(int timeoutMillis, string deviceName);
+      THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> requestServices();
+      THashSet<Worldpay.Within.Rpc.Types.Price> getServicePrices(int serviceId);
+      Worldpay.Within.Rpc.Types.TotalPriceResponse selectService(int serviceId, int numberOfUnits, int priceId);
+      Worldpay.Within.Rpc.Types.PaymentResponse makePayment(Worldpay.Within.Rpc.Types.TotalPriceResponse request);
+      Worldpay.Within.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      Worldpay.Within.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      void CloseRPCAgent();
     }
 
     /// <summary>
@@ -48,15 +50,15 @@ namespace Worldpay.Innovation.WPWithin.Rpc
       void End_setup(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_addService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc);
+      IAsyncResult Begin_addService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc);
       void End_addService(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_removeService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc);
+      IAsyncResult Begin_removeService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc);
       void End_removeService(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig);
+      IAsyncResult Begin_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig);
       void End_initConsumer(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
@@ -65,7 +67,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_getDevice(AsyncCallback callback, object state);
-      Worldpay.Innovation.WPWithin.Rpc.Types.Device End_getDevice(IAsyncResult asyncResult);
+      Worldpay.Within.Rpc.Types.Device End_getDevice(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_startServiceBroadcast(AsyncCallback callback, object state, int timeoutMillis);
@@ -77,31 +79,39 @@ namespace Worldpay.Innovation.WPWithin.Rpc
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_deviceDiscovery(AsyncCallback callback, object state, int timeoutMillis);
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> End_deviceDiscovery(IAsyncResult asyncResult);
+      THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> End_deviceDiscovery(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName);
+      Worldpay.Within.Rpc.Types.ServiceMessage End_searchForDevice(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_requestServices(AsyncCallback callback, object state);
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> End_requestServices(IAsyncResult asyncResult);
+      THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> End_requestServices(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_getServicePrices(AsyncCallback callback, object state, int serviceId);
-      THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> End_getServicePrices(IAsyncResult asyncResult);
+      THashSet<Worldpay.Within.Rpc.Types.Price> End_getServicePrices(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
       IAsyncResult Begin_selectService(AsyncCallback callback, object state, int serviceId, int numberOfUnits, int priceId);
-      Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse End_selectService(IAsyncResult asyncResult);
+      Worldpay.Within.Rpc.Types.TotalPriceResponse End_selectService(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_makePayment(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request);
-      Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse End_makePayment(IAsyncResult asyncResult);
+      IAsyncResult Begin_makePayment(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.TotalPriceResponse request);
+      Worldpay.Within.Rpc.Types.PaymentResponse End_makePayment(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
-      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken End_beginServiceDelivery(IAsyncResult asyncResult);
+      IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply);
+      Worldpay.Within.Rpc.Types.ServiceDeliveryToken End_beginServiceDelivery(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
-      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken End_endServiceDelivery(IAsyncResult asyncResult);
+      IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived);
+      Worldpay.Within.Rpc.Types.ServiceDeliveryToken End_endServiceDelivery(IAsyncResult asyncResult);
+      #endif
+      #if SILVERLIGHT
+      IAsyncResult Begin_CloseRPCAgent(AsyncCallback callback, object state);
+      void End_CloseRPCAgent(IAsyncResult asyncResult);
       #endif
     }
 
@@ -229,7 +239,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_addService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public IAsyncResult Begin_addService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc)
       {
         return send_addService(callback, state, svc);
       }
@@ -242,7 +252,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public void addService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public void addService(Worldpay.Within.Rpc.Types.Service svc)
       {
         #if !SILVERLIGHT
         send_addService(svc);
@@ -255,9 +265,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_addService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public IAsyncResult send_addService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc)
       #else
-      public void send_addService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public void send_addService(Worldpay.Within.Rpc.Types.Service svc)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("addService", TMessageType.Call, seqid_));
@@ -291,7 +301,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_removeService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public IAsyncResult Begin_removeService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc)
       {
         return send_removeService(callback, state, svc);
       }
@@ -304,7 +314,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public void removeService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public void removeService(Worldpay.Within.Rpc.Types.Service svc)
       {
         #if !SILVERLIGHT
         send_removeService(svc);
@@ -317,9 +327,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_removeService(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public IAsyncResult send_removeService(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.Service svc)
       #else
-      public void send_removeService(Worldpay.Innovation.WPWithin.Rpc.Types.Service svc)
+      public void send_removeService(Worldpay.Within.Rpc.Types.Service svc)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("removeService", TMessageType.Call, seqid_));
@@ -353,7 +363,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
+      public IAsyncResult Begin_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
       {
         return send_initConsumer(callback, state, scheme, hostname, port, urlPrefix, clientID, hceCard, pspConfig);
       }
@@ -366,7 +376,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public void initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
+      public void initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
       {
         #if !SILVERLIGHT
         send_initConsumer(scheme, hostname, port, urlPrefix, clientID, hceCard, pspConfig);
@@ -379,9 +389,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
+      public IAsyncResult send_initConsumer(AsyncCallback callback, object state, string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
       #else
-      public void send_initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Innovation.WPWithin.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
+      public void send_initConsumer(string scheme, string hostname, int port, string urlPrefix, string clientID, Worldpay.Within.Rpc.Types.HCECard hceCard, Dictionary<string, string> pspConfig)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("initConsumer", TMessageType.Call, seqid_));
@@ -488,7 +498,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         return send_getDevice(callback, state);
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Device End_getDevice(IAsyncResult asyncResult)
+      public Worldpay.Within.Rpc.Types.Device End_getDevice(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_getDevice();
@@ -496,7 +506,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Device getDevice()
+      public Worldpay.Within.Rpc.Types.Device getDevice()
       {
         #if !SILVERLIGHT
         send_getDevice();
@@ -525,7 +535,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Device recv_getDevice()
+      public Worldpay.Within.Rpc.Types.Device recv_getDevice()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -672,7 +682,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         return send_deviceDiscovery(callback, state, timeoutMillis);
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> End_deviceDiscovery(IAsyncResult asyncResult)
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> End_deviceDiscovery(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_deviceDiscovery();
@@ -680,7 +690,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> deviceDiscovery(int timeoutMillis)
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> deviceDiscovery(int timeoutMillis)
       {
         #if !SILVERLIGHT
         send_deviceDiscovery(timeoutMillis);
@@ -710,7 +720,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> recv_deviceDiscovery()
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> recv_deviceDiscovery()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -732,12 +742,78 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
+      public IAsyncResult Begin_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName)
+      {
+        return send_searchForDevice(callback, state, timeoutMillis, deviceName);
+      }
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage End_searchForDevice(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        return recv_searchForDevice();
+      }
+
+      #endif
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage searchForDevice(int timeoutMillis, string deviceName)
+      {
+        #if !SILVERLIGHT
+        send_searchForDevice(timeoutMillis, deviceName);
+        return recv_searchForDevice();
+
+        #else
+        var asyncResult = Begin_searchForDevice(null, null, timeoutMillis, deviceName);
+        return End_searchForDevice(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_searchForDevice(AsyncCallback callback, object state, int timeoutMillis, string deviceName)
+      #else
+      public void send_searchForDevice(int timeoutMillis, string deviceName)
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Call, seqid_));
+        searchForDevice_args args = new searchForDevice_args();
+        args.TimeoutMillis = timeoutMillis;
+        args.DeviceName = deviceName;
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage recv_searchForDevice()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        searchForDevice_result result = new searchForDevice_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        if (result.Success != null) {
+          return result.Success;
+        }
+        if (result.Err != null) {
+          throw result.Err;
+        }
+        throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "searchForDevice failed: unknown result");
+      }
+
+      
+      #if SILVERLIGHT
       public IAsyncResult Begin_requestServices(AsyncCallback callback, object state)
       {
         return send_requestServices(callback, state);
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> End_requestServices(IAsyncResult asyncResult)
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> End_requestServices(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_requestServices();
@@ -745,7 +821,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> requestServices()
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> requestServices()
       {
         #if !SILVERLIGHT
         send_requestServices();
@@ -774,7 +850,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> recv_requestServices()
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> recv_requestServices()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -801,7 +877,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         return send_getServicePrices(callback, state, serviceId);
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> End_getServicePrices(IAsyncResult asyncResult)
+      public THashSet<Worldpay.Within.Rpc.Types.Price> End_getServicePrices(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_getServicePrices();
@@ -809,7 +885,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> getServicePrices(int serviceId)
+      public THashSet<Worldpay.Within.Rpc.Types.Price> getServicePrices(int serviceId)
       {
         #if !SILVERLIGHT
         send_getServicePrices(serviceId);
@@ -839,7 +915,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> recv_getServicePrices()
+      public THashSet<Worldpay.Within.Rpc.Types.Price> recv_getServicePrices()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -866,7 +942,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         return send_selectService(callback, state, serviceId, numberOfUnits, priceId);
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse End_selectService(IAsyncResult asyncResult)
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse End_selectService(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_selectService();
@@ -874,7 +950,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse selectService(int serviceId, int numberOfUnits, int priceId)
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse selectService(int serviceId, int numberOfUnits, int priceId)
       {
         #if !SILVERLIGHT
         send_selectService(serviceId, numberOfUnits, priceId);
@@ -906,7 +982,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse recv_selectService()
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse recv_selectService()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -928,12 +1004,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_makePayment(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request)
+      public IAsyncResult Begin_makePayment(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.TotalPriceResponse request)
       {
         return send_makePayment(callback, state, request);
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse End_makePayment(IAsyncResult asyncResult)
+      public Worldpay.Within.Rpc.Types.PaymentResponse End_makePayment(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_makePayment();
@@ -941,7 +1017,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse makePayment(Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request)
+      public Worldpay.Within.Rpc.Types.PaymentResponse makePayment(Worldpay.Within.Rpc.Types.TotalPriceResponse request)
       {
         #if !SILVERLIGHT
         send_makePayment(request);
@@ -954,9 +1030,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_makePayment(AsyncCallback callback, object state, Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request)
+      public IAsyncResult send_makePayment(AsyncCallback callback, object state, Worldpay.Within.Rpc.Types.TotalPriceResponse request)
       #else
-      public void send_makePayment(Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse request)
+      public void send_makePayment(Worldpay.Within.Rpc.Types.TotalPriceResponse request)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("makePayment", TMessageType.Call, seqid_));
@@ -971,7 +1047,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse recv_makePayment()
+      public Worldpay.Within.Rpc.Types.PaymentResponse recv_makePayment()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -993,12 +1069,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult Begin_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
         return send_beginServiceDelivery(callback, state, serviceID, serviceDeliveryToken, unitsToSupply);
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken End_beginServiceDelivery(IAsyncResult asyncResult)
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken End_beginServiceDelivery(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_beginServiceDelivery();
@@ -1006,7 +1082,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       {
         #if !SILVERLIGHT
         send_beginServiceDelivery(serviceID, serviceDeliveryToken, unitsToSupply);
@@ -1019,9 +1095,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public IAsyncResult send_beginServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #else
-      public void send_beginServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
+      public void send_beginServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsToSupply)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("beginServiceDelivery", TMessageType.Call, seqid_));
@@ -1038,7 +1114,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken recv_beginServiceDelivery()
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken recv_beginServiceDelivery()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -1060,12 +1136,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public IAsyncResult Begin_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       {
         return send_endServiceDelivery(callback, state, serviceID, serviceDeliveryToken, unitsReceived);
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken End_endServiceDelivery(IAsyncResult asyncResult)
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken End_endServiceDelivery(IAsyncResult asyncResult)
       {
         oprot_.Transport.EndFlush(asyncResult);
         return recv_endServiceDelivery();
@@ -1073,7 +1149,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       #endif
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       {
         #if !SILVERLIGHT
         send_endServiceDelivery(serviceID, serviceDeliveryToken, unitsReceived);
@@ -1086,9 +1162,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public IAsyncResult send_endServiceDelivery(AsyncCallback callback, object state, int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       #else
-      public void send_endServiceDelivery(int serviceID, Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
+      public void send_endServiceDelivery(int serviceID, Worldpay.Within.Rpc.Types.ServiceDeliveryToken serviceDeliveryToken, int unitsReceived)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("endServiceDelivery", TMessageType.Call, seqid_));
@@ -1105,7 +1181,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         #endif
       }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken recv_endServiceDelivery()
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken recv_endServiceDelivery()
       {
         TMessage msg = iprot_.ReadMessageBegin();
         if (msg.Type == TMessageType.Exception) {
@@ -1125,6 +1201,64 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "endServiceDelivery failed: unknown result");
       }
 
+      
+      #if SILVERLIGHT
+      public IAsyncResult Begin_CloseRPCAgent(AsyncCallback callback, object state)
+      {
+        return send_CloseRPCAgent(callback, state);
+      }
+
+      public void End_CloseRPCAgent(IAsyncResult asyncResult)
+      {
+        oprot_.Transport.EndFlush(asyncResult);
+        recv_CloseRPCAgent();
+      }
+
+      #endif
+
+      public void CloseRPCAgent()
+      {
+        #if !SILVERLIGHT
+        send_CloseRPCAgent();
+        recv_CloseRPCAgent();
+
+        #else
+        var asyncResult = Begin_CloseRPCAgent(null, null);
+        End_CloseRPCAgent(asyncResult);
+
+        #endif
+      }
+      #if SILVERLIGHT
+      public IAsyncResult send_CloseRPCAgent(AsyncCallback callback, object state)
+      #else
+      public void send_CloseRPCAgent()
+      #endif
+      {
+        oprot_.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Call, seqid_));
+        CloseRPCAgent_args args = new CloseRPCAgent_args();
+        args.Write(oprot_);
+        oprot_.WriteMessageEnd();
+        #if SILVERLIGHT
+        return oprot_.Transport.BeginFlush(callback, state);
+        #else
+        oprot_.Transport.Flush();
+        #endif
+      }
+
+      public void recv_CloseRPCAgent()
+      {
+        TMessage msg = iprot_.ReadMessageBegin();
+        if (msg.Type == TMessageType.Exception) {
+          TApplicationException x = TApplicationException.Read(iprot_);
+          iprot_.ReadMessageEnd();
+          throw x;
+        }
+        CloseRPCAgent_result result = new CloseRPCAgent_result();
+        result.Read(iprot_);
+        iprot_.ReadMessageEnd();
+        return;
+      }
+
     }
     public class Processor : TProcessor {
       public Processor(ISync iface)
@@ -1139,12 +1273,14 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         processMap_["startServiceBroadcast"] = startServiceBroadcast_Process;
         processMap_["stopServiceBroadcast"] = stopServiceBroadcast_Process;
         processMap_["deviceDiscovery"] = deviceDiscovery_Process;
+        processMap_["searchForDevice"] = searchForDevice_Process;
         processMap_["requestServices"] = requestServices_Process;
         processMap_["getServicePrices"] = getServicePrices_Process;
         processMap_["selectService"] = selectService_Process;
         processMap_["makePayment"] = makePayment_Process;
         processMap_["beginServiceDelivery"] = beginServiceDelivery_Process;
         processMap_["endServiceDelivery"] = endServiceDelivery_Process;
+        processMap_["CloseRPCAgent"] = CloseRPCAgent_Process;
       }
 
       protected delegate void ProcessFunction(int seqid, TProtocol iprot, TProtocol oprot);
@@ -1189,7 +1325,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.setup(args.Name, args.Description);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1224,7 +1360,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.addService(args.Svc);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1259,7 +1395,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.removeService(args.Svc);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1294,7 +1430,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.initConsumer(args.Scheme, args.Hostname, args.Port.Value, args.UrlPrefix, args.ClientID, args.HceCard, args.PspConfig);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1329,7 +1465,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.initProducer(args.PspConfig);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1392,7 +1528,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.startServiceBroadcast(args.TimeoutMillis.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1427,7 +1563,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             iface_.stopServiceBroadcast();
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1462,7 +1598,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.deviceDiscovery(args.TimeoutMillis.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1485,6 +1621,41 @@ namespace Worldpay.Innovation.WPWithin.Rpc
         oprot.Transport.Flush();
       }
 
+      public void searchForDevice_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        searchForDevice_args args = new searchForDevice_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        searchForDevice_result result = new searchForDevice_result();
+        try
+        {
+          try
+          {
+            result.Success = iface_.searchForDevice(args.TimeoutMillis.Value, args.DeviceName);
+          }
+          catch (Worldpay.Within.Rpc.Types.Error err)
+          {
+            result.Err = err;
+          }
+          oprot.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("searchForDevice", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
       public void requestServices_Process(int seqid, TProtocol iprot, TProtocol oprot)
       {
         requestServices_args args = new requestServices_args();
@@ -1497,7 +1668,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.requestServices();
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1532,7 +1703,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.getServicePrices(args.ServiceId.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1567,7 +1738,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.selectService(args.ServiceId.Value, args.NumberOfUnits.Value, args.PriceId.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1602,7 +1773,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.makePayment(args.Request);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1637,7 +1808,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.beginServiceDelivery(args.ServiceID.Value, args.ServiceDeliveryToken, args.UnitsToSupply.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1672,7 +1843,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           {
             result.Success = iface_.endServiceDelivery(args.ServiceID.Value, args.ServiceDeliveryToken, args.UnitsReceived.Value);
           }
-          catch (Worldpay.Innovation.WPWithin.Rpc.Types.Error err)
+          catch (Worldpay.Within.Rpc.Types.Error err)
           {
             result.Err = err;
           }
@@ -1689,6 +1860,34 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           Console.Error.WriteLine(ex.ToString());
           TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
           oprot.WriteMessageBegin(new TMessage("endServiceDelivery", TMessageType.Exception, seqid));
+          x.Write(oprot);
+        }
+        oprot.WriteMessageEnd();
+        oprot.Transport.Flush();
+      }
+
+      public void CloseRPCAgent_Process(int seqid, TProtocol iprot, TProtocol oprot)
+      {
+        CloseRPCAgent_args args = new CloseRPCAgent_args();
+        args.Read(iprot);
+        iprot.ReadMessageEnd();
+        CloseRPCAgent_result result = new CloseRPCAgent_result();
+        try
+        {
+          iface_.CloseRPCAgent();
+          oprot.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Reply, seqid)); 
+          result.Write(oprot);
+        }
+        catch (TTransportException)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine("Error occurred in processor:");
+          Console.Error.WriteLine(ex.ToString());
+          TApplicationException x = new TApplicationException        (TApplicationException.ExceptionType.InternalError," Internal error.");
+          oprot.WriteMessageBegin(new TMessage("CloseRPCAgent", TMessageType.Exception, seqid));
           x.Write(oprot);
         }
         oprot.WriteMessageEnd();
@@ -1814,7 +2013,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class setup_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public setup_result() {
       }
@@ -1836,7 +2035,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -1903,7 +2102,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class addService_args : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Service Svc { get; set; }
+      public Worldpay.Within.Rpc.Types.Service Svc { get; set; }
 
       public addService_args() {
       }
@@ -1925,7 +2124,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Svc = new Worldpay.Innovation.WPWithin.Rpc.Types.Service();
+                  Svc = new Worldpay.Within.Rpc.Types.Service();
                   Svc.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -1991,7 +2190,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class addService_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public addService_result() {
       }
@@ -2013,7 +2212,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2080,7 +2279,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class removeService_args : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Service Svc { get; set; }
+      public Worldpay.Within.Rpc.Types.Service Svc { get; set; }
 
       public removeService_args() {
       }
@@ -2102,7 +2301,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Svc = new Worldpay.Innovation.WPWithin.Rpc.Types.Service();
+                  Svc = new Worldpay.Within.Rpc.Types.Service();
                   Svc.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2168,7 +2367,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class removeService_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public removeService_result() {
       }
@@ -2190,7 +2389,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2267,7 +2466,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       public string ClientID { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.HCECard HceCard { get; set; }
+      public Worldpay.Within.Rpc.Types.HCECard HceCard { get; set; }
 
       public Dictionary<string, string> PspConfig { get; set; }
 
@@ -2326,7 +2525,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 6:
                 if (field.Type == TType.Struct) {
-                  HceCard = new Worldpay.Innovation.WPWithin.Rpc.Types.HCECard();
+                  HceCard = new Worldpay.Within.Rpc.Types.HCECard();
                   HceCard.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2503,7 +2702,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class initConsumer_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public initConsumer_result() {
       }
@@ -2525,7 +2724,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2699,7 +2898,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class initProducer_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public initProducer_result() {
       }
@@ -2721,7 +2920,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -2850,7 +3049,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class getDevice_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Device Success { get; set; }
+      public Worldpay.Within.Rpc.Types.Device Success { get; set; }
 
       public getDevice_result() {
       }
@@ -2872,7 +3071,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 0:
                 if (field.Type == TType.Struct) {
-                  Success = new Worldpay.Innovation.WPWithin.Rpc.Types.Device();
+                  Success = new Worldpay.Within.Rpc.Types.Device();
                   Success.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3026,7 +3225,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class startServiceBroadcast_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public startServiceBroadcast_result() {
       }
@@ -3048,7 +3247,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3177,7 +3376,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class stopServiceBroadcast_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public stopServiceBroadcast_result() {
       }
@@ -3199,7 +3398,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3353,9 +3552,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class deviceDiscovery_result : TBase
     {
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage> Success { get; set; }
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceMessage> Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public deviceDiscovery_result() {
       }
@@ -3378,12 +3577,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
               case 0:
                 if (field.Type == TType.Set) {
                   {
-                    Success = new THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage>();
+                    Success = new THashSet<Worldpay.Within.Rpc.Types.ServiceMessage>();
                     TSet _set10 = iprot.ReadSetBegin();
                     for( int _i11 = 0; _i11 < _set10.Count; ++_i11)
                     {
-                      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage _elem12;
-                      _elem12 = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage();
+                      Worldpay.Within.Rpc.Types.ServiceMessage _elem12;
+                      _elem12 = new Worldpay.Within.Rpc.Types.ServiceMessage();
                       _elem12.Read(iprot);
                       Success.Add(_elem12);
                     }
@@ -3395,7 +3594,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3430,7 +3629,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             oprot.WriteFieldBegin(field);
             {
               oprot.WriteSetBegin(new TSet(TType.Struct, Success.Count));
-              foreach (Worldpay.Innovation.WPWithin.Rpc.Types.ServiceMessage _iter13 in Success)
+              foreach (Worldpay.Within.Rpc.Types.ServiceMessage _iter13 in Success)
               {
                 _iter13.Write(oprot);
               }
@@ -3462,6 +3661,228 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           __first = false;
           __sb.Append("Success: ");
           __sb.Append(Success);
+        }
+        if (Err != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Err: ");
+          __sb.Append(Err== null ? "<null>" : Err.ToString());
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class searchForDevice_args : TBase
+    {
+
+      public int? TimeoutMillis { get; set; }
+
+      public string DeviceName { get; set; }
+
+      public searchForDevice_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 1:
+                if (field.Type == TType.I32) {
+                  TimeoutMillis = iprot.ReadI32();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 2:
+                if (field.Type == TType.String) {
+                  DeviceName = iprot.ReadString();
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("searchForDevice_args");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+          if (TimeoutMillis != null) {
+            field.Name = "timeoutMillis";
+            field.Type = TType.I32;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(TimeoutMillis.Value);
+            oprot.WriteFieldEnd();
+          }
+          if (DeviceName != null) {
+            field.Name = "deviceName";
+            field.Type = TType.String;
+            field.ID = 2;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteString(DeviceName);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("searchForDevice_args(");
+        bool __first = true;
+        if (TimeoutMillis != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("TimeoutMillis: ");
+          __sb.Append(TimeoutMillis);
+        }
+        if (DeviceName != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("DeviceName: ");
+          __sb.Append(DeviceName);
+        }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class searchForDevice_result : TBase
+    {
+
+      public Worldpay.Within.Rpc.Types.ServiceMessage Success { get; set; }
+
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
+
+      public searchForDevice_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              case 0:
+                if (field.Type == TType.Struct) {
+                  Success = new Worldpay.Within.Rpc.Types.ServiceMessage();
+                  Success.Read(iprot);
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              case 1:
+                if (field.Type == TType.Struct) {
+                  Err = new Worldpay.Within.Rpc.Types.Error();
+                  Err.Read(iprot);
+                } else { 
+                  TProtocolUtil.Skip(iprot, field.Type);
+                }
+                break;
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("searchForDevice_result");
+          oprot.WriteStructBegin(struc);
+          TField field = new TField();
+
+          if (this.Success != null) {
+            field.Name = "Success";
+            field.Type = TType.Struct;
+            field.ID = 0;
+            oprot.WriteFieldBegin(field);
+            Success.Write(oprot);
+            oprot.WriteFieldEnd();
+          } else if (this.Err != null) {
+            field.Name = "Err";
+            field.Type = TType.Struct;
+            field.ID = 1;
+            oprot.WriteFieldBegin(field);
+            Err.Write(oprot);
+            oprot.WriteFieldEnd();
+          }
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("searchForDevice_result(");
+        bool __first = true;
+        if (Success != null) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Success: ");
+          __sb.Append(Success== null ? "<null>" : Success.ToString());
         }
         if (Err != null) {
           if(!__first) { __sb.Append(", "); }
@@ -3544,9 +3965,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class requestServices_result : TBase
     {
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails> Success { get; set; }
+      public THashSet<Worldpay.Within.Rpc.Types.ServiceDetails> Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public requestServices_result() {
       }
@@ -3569,12 +3990,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
               case 0:
                 if (field.Type == TType.Set) {
                   {
-                    Success = new THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails>();
+                    Success = new THashSet<Worldpay.Within.Rpc.Types.ServiceDetails>();
                     TSet _set14 = iprot.ReadSetBegin();
                     for( int _i15 = 0; _i15 < _set14.Count; ++_i15)
                     {
-                      Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails _elem16;
-                      _elem16 = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails();
+                      Worldpay.Within.Rpc.Types.ServiceDetails _elem16;
+                      _elem16 = new Worldpay.Within.Rpc.Types.ServiceDetails();
                       _elem16.Read(iprot);
                       Success.Add(_elem16);
                     }
@@ -3586,7 +4007,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3621,7 +4042,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             oprot.WriteFieldBegin(field);
             {
               oprot.WriteSetBegin(new TSet(TType.Struct, Success.Count));
-              foreach (Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDetails _iter17 in Success)
+              foreach (Worldpay.Within.Rpc.Types.ServiceDetails _iter17 in Success)
               {
                 _iter17.Write(oprot);
               }
@@ -3760,9 +4181,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class getServicePrices_result : TBase
     {
 
-      public THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price> Success { get; set; }
+      public THashSet<Worldpay.Within.Rpc.Types.Price> Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public getServicePrices_result() {
       }
@@ -3785,12 +4206,12 @@ namespace Worldpay.Innovation.WPWithin.Rpc
               case 0:
                 if (field.Type == TType.Set) {
                   {
-                    Success = new THashSet<Worldpay.Innovation.WPWithin.Rpc.Types.Price>();
+                    Success = new THashSet<Worldpay.Within.Rpc.Types.Price>();
                     TSet _set18 = iprot.ReadSetBegin();
                     for( int _i19 = 0; _i19 < _set18.Count; ++_i19)
                     {
-                      Worldpay.Innovation.WPWithin.Rpc.Types.Price _elem20;
-                      _elem20 = new Worldpay.Innovation.WPWithin.Rpc.Types.Price();
+                      Worldpay.Within.Rpc.Types.Price _elem20;
+                      _elem20 = new Worldpay.Within.Rpc.Types.Price();
                       _elem20.Read(iprot);
                       Success.Add(_elem20);
                     }
@@ -3802,7 +4223,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -3837,7 +4258,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             oprot.WriteFieldBegin(field);
             {
               oprot.WriteSetBegin(new TSet(TType.Struct, Success.Count));
-              foreach (Worldpay.Innovation.WPWithin.Rpc.Types.Price _iter21 in Success)
+              foreach (Worldpay.Within.Rpc.Types.Price _iter21 in Success)
               {
                 _iter21.Write(oprot);
               }
@@ -4022,9 +4443,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class selectService_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse Success { get; set; }
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public selectService_result() {
       }
@@ -4046,7 +4467,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 0:
                 if (field.Type == TType.Struct) {
-                  Success = new Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse();
+                  Success = new Worldpay.Within.Rpc.Types.TotalPriceResponse();
                   Success.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4054,7 +4475,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4134,7 +4555,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class makePayment_args : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse Request { get; set; }
+      public Worldpay.Within.Rpc.Types.TotalPriceResponse Request { get; set; }
 
       public makePayment_args() {
       }
@@ -4156,7 +4577,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 1:
                 if (field.Type == TType.Struct) {
-                  Request = new Worldpay.Innovation.WPWithin.Rpc.Types.TotalPriceResponse();
+                  Request = new Worldpay.Within.Rpc.Types.TotalPriceResponse();
                   Request.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4222,9 +4643,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class makePayment_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse Success { get; set; }
+      public Worldpay.Within.Rpc.Types.PaymentResponse Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public makePayment_result() {
       }
@@ -4246,7 +4667,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 0:
                 if (field.Type == TType.Struct) {
-                  Success = new Worldpay.Innovation.WPWithin.Rpc.Types.PaymentResponse();
+                  Success = new Worldpay.Within.Rpc.Types.PaymentResponse();
                   Success.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4254,7 +4675,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4336,7 +4757,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       public int? ServiceID { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
 
       public int? UnitsToSupply { get; set; }
 
@@ -4367,7 +4788,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 2:
                 if (field.Type == TType.Struct) {
-                  ServiceDeliveryToken = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  ServiceDeliveryToken = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   ServiceDeliveryToken.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4468,9 +4889,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class beginServiceDelivery_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken Success { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public beginServiceDelivery_result() {
       }
@@ -4492,7 +4913,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 0:
                 if (field.Type == TType.Struct) {
-                  Success = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  Success = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   Success.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4500,7 +4921,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4582,7 +5003,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
 
       public int? ServiceID { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken ServiceDeliveryToken { get; set; }
 
       public int? UnitsReceived { get; set; }
 
@@ -4613,7 +5034,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 2:
                 if (field.Type == TType.Struct) {
-                  ServiceDeliveryToken = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  ServiceDeliveryToken = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   ServiceDeliveryToken.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4714,9 +5135,9 @@ namespace Worldpay.Innovation.WPWithin.Rpc
     public partial class endServiceDelivery_result : TBase
     {
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken Success { get; set; }
+      public Worldpay.Within.Rpc.Types.ServiceDeliveryToken Success { get; set; }
 
-      public Worldpay.Innovation.WPWithin.Rpc.Types.Error Err { get; set; }
+      public Worldpay.Within.Rpc.Types.Error Err { get; set; }
 
       public endServiceDelivery_result() {
       }
@@ -4738,7 +5159,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
             {
               case 0:
                 if (field.Type == TType.Struct) {
-                  Success = new Worldpay.Innovation.WPWithin.Rpc.Types.ServiceDeliveryToken();
+                  Success = new Worldpay.Within.Rpc.Types.ServiceDeliveryToken();
                   Success.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4746,7 +5167,7 @@ namespace Worldpay.Innovation.WPWithin.Rpc
                 break;
               case 1:
                 if (field.Type == TType.Struct) {
-                  Err = new Worldpay.Innovation.WPWithin.Rpc.Types.Error();
+                  Err = new Worldpay.Within.Rpc.Types.Error();
                   Err.Read(iprot);
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
@@ -4813,6 +5234,131 @@ namespace Worldpay.Innovation.WPWithin.Rpc
           __sb.Append("Err: ");
           __sb.Append(Err== null ? "<null>" : Err.ToString());
         }
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class CloseRPCAgent_args : TBase
+    {
+
+      public CloseRPCAgent_args() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("CloseRPCAgent_args");
+          oprot.WriteStructBegin(struc);
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("CloseRPCAgent_args(");
+        __sb.Append(")");
+        return __sb.ToString();
+      }
+
+    }
+
+
+    #if !SILVERLIGHT
+    [Serializable]
+    #endif
+    public partial class CloseRPCAgent_result : TBase
+    {
+
+      public CloseRPCAgent_result() {
+      }
+
+      public void Read (TProtocol iprot)
+      {
+        iprot.IncrementRecursionDepth();
+        try
+        {
+          TField field;
+          iprot.ReadStructBegin();
+          while (true)
+          {
+            field = iprot.ReadFieldBegin();
+            if (field.Type == TType.Stop) { 
+              break;
+            }
+            switch (field.ID)
+            {
+              default: 
+                TProtocolUtil.Skip(iprot, field.Type);
+                break;
+            }
+            iprot.ReadFieldEnd();
+          }
+          iprot.ReadStructEnd();
+        }
+        finally
+        {
+          iprot.DecrementRecursionDepth();
+        }
+      }
+
+      public void Write(TProtocol oprot) {
+        oprot.IncrementRecursionDepth();
+        try
+        {
+          TStruct struc = new TStruct("CloseRPCAgent_result");
+          oprot.WriteStructBegin(struc);
+
+          oprot.WriteFieldStop();
+          oprot.WriteStructEnd();
+        }
+        finally
+        {
+          oprot.DecrementRecursionDepth();
+        }
+      }
+
+      public override string ToString() {
+        StringBuilder __sb = new StringBuilder("CloseRPCAgent_result(");
         __sb.Append(")");
         return __sb.ToString();
       }

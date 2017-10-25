@@ -2,7 +2,7 @@
 using System.Reflection;
 using Common.Logging;
 
-namespace Worldpay.Innovation.WPWithin.AgentManager
+namespace Worldpay.Within.AgentManager
 {
     /// <summary>
     /// Utility methods to work out the name of the RPC agent executable for a given platform.

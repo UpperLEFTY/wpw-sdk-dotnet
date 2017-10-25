@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     /// <summary>
     /// TODO: Fix KeyNotFoundExceptions by testing value before returning.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class PspConfig
     {
         public const string PspNameProperty = "psp_name";
@@ -29,11 +31,13 @@ namespace Worldpay.Innovation.WPWithin.ThriftAdapters
         {
             _properties = new Dictionary<string, string>
             {
+                // the defaults will be overwritten after read of consumer.json/producer.json
                 {PspNameProperty, PspNameDefault},
                 {ApiEndpointProperty, ApiEndpointDefault}
             };
         }
 
+        [JsonProperty(PropertyName = PspNameProperty)]
         public string PspName
         {
             get { return GetOrNull(PspNameProperty); }
@@ -51,30 +55,35 @@ namespace Worldpay.Innovation.WPWithin.ThriftAdapters
             return _properties.TryGetValue(propertyName, out propertyValue) ? propertyValue : null;
         }
 
+        [JsonProperty(PropertyName = HtePublicKeyProperty, NullValueHandling = NullValueHandling.Ignore)]
         public string HtePublicKey
         {
             get { return GetOrNull(HtePublicKeyProperty); }
             set { _properties[HtePublicKeyProperty] = value; }
         }
 
+        [JsonProperty(PropertyName = HtePrivateKeyProperty, NullValueHandling = NullValueHandling.Ignore)]
         public string HtePrivateKey
         {
             get { return GetOrNull(HtePrivateKeyProperty); }
             set { _properties[HtePrivateKeyProperty] = value; }
         }
 
+        [JsonProperty(PropertyName = MerchantClientKeyProperty, NullValueHandling = NullValueHandling.Ignore)]
         public string MerchantClientKey
         {
             get { return GetOrNull(MerchantClientKeyProperty); }
             set { _properties[MerchantClientKeyProperty] = value; }
         }
 
+        [JsonProperty(PropertyName = MerchantServiceKeyProperty, NullValueHandling = NullValueHandling.Ignore)]
         public string MerchantServiceKey
         {
             get { return GetOrNull(MerchantServiceKeyProperty); }
             set { _properties[MerchantServiceKeyProperty] = value; }
         }
 
+        [JsonProperty(PropertyName = ApiEndpointProperty)]
         public string ApiEndPoint
         {
             get { return GetOrNull(ApiEndpointProperty); }

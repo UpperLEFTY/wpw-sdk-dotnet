@@ -4,13 +4,13 @@ using System.IO;
 using Common.Logging;
 using Thrift.Protocol;
 using Thrift.Transport;
-using Worldpay.Innovation.WPWithin.Utils;
+using Worldpay.Within.Utils;
 
-namespace Worldpay.Innovation.WPWithin.AgentManager
+namespace Worldpay.Within.AgentManager
 {
     /// <summary>
     ///     Manages the configuration of an Thrift RPC Agent (passed to <code>rpc-client.exe</code>) or the
-    ///     <see cref="WPWithinService" /> instance that will connect to it.
+    ///     <see cref="RpcAgentManager.StartThriftRpcAgentProcess" /> instance that will connect to it.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -22,15 +22,13 @@ namespace Worldpay.Innovation.WPWithin.AgentManager
     ///         Parameters have hard-coded defaults in this class and these defaults can be overridden in application settings
     ///         (typically in app.config or web.config files), or
     ///         set directly on an instance of this class before passing to
-    ///         <see cref="RpcAgentManager.StartThriftRpcAgentProcess()" />.
+    ///         <see cref="RpcAgentManager" />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="RpcAgentManager" />
+    /// <seealso cref="WPWithinService" />
     public class RpcAgentConfiguration
     {
         private static readonly ILog Log = LogManager.GetLogger<RpcAgentConfiguration>();
-
-
         /// <summary>
         ///     The name of the environment variable that contains the home directory for the Worldpay Within SDK.
         ///     The RPC Agent will be looked for under the "bin" subdirectory.
@@ -190,7 +188,7 @@ namespace Worldpay.Innovation.WPWithin.AgentManager
                 string agentFilename = RpcAgentFilenameGenerator.GetForCurrent();
                 Log.Info("Searching for " + agentFilename);
 
-                _rpcAgentPath = LookForRpcAgentIn("wpw-bin") ??
+                _rpcAgentPath = LookForRpcAgentIn(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), new string[] { "iot-core-component", "bin" } )) ??
                                 LookForRpcAgentIn(GetPathFromApplicationConfig()) ??
                                 LookForRpcAgentIn(GetPathFromEnvironment());
 
@@ -308,9 +306,10 @@ namespace Worldpay.Innovation.WPWithin.AgentManager
             {
                 return null;
             }
+            string[] path2join = new string[] { GetParentPath(3), dirToLookIn, RpcAgentFilenameGenerator.GetForCurrent() };
+            string path = string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), path2join);
             FileInfo fi =
-                new FileInfo(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), dirToLookIn,
-                    RpcAgentFilenameGenerator.GetForCurrent()));
+                new FileInfo(path);
             return DoesFileExist(fi) ? fi.FullName : null;
         }
 
@@ -328,6 +327,16 @@ namespace Worldpay.Innovation.WPWithin.AgentManager
             bool result = file.Exists;
             Log.Info($"File {filename} does {(result ? "" : "not ")}exist");
             return result;
+        }
+        private string GetParentPath(int levelsUp)
+        {
+            string currentDir = Directory.GetCurrentDirectory().ToString();
+            for (int i = 0; i < levelsUp; i++)
+            {
+                currentDir =  Directory.GetParent(currentDir).ToString();
+                
+            }
+            return currentDir;
         }
 
         private string GetPathFromEnvironment()

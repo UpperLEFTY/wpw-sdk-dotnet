@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Worldpay.Innovation.WPWithin.AgentManager
+namespace Worldpay.Within.AgentManager
 {
     public class RpcAgentException : Exception
     {

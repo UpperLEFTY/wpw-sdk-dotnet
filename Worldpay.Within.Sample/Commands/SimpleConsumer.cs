@@ -3,9 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+using Worldpay.Within.ThriftAdapters;
+using Worldpay.Within.AgentManager;
+using Newtonsoft.Json;
+using System;
+using Worldpay.Within.Sample.Properties;
+
+namespace Worldpay.Within.Sample.Commands
 {
     /// <summary>
     ///     Shows how a consumer can purchase and take delivery of a service offered by a producer, such as
@@ -15,11 +20,27 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
     {
         private readonly TextWriter _error;
         private readonly TextWriter _output;
+        private RpcAgentManager _rpcManager;
+        private WPWithinService _service;
+        private Config config;
 
-        public SimpleConsumer(TextWriter output, TextWriter error)
+
+        public SimpleConsumer(TextWriter output, TextWriter error, RpcAgentManager rpcAgent)
         {
             _output = output;
             _error = error;
+            _rpcManager = rpcAgent;
+
+            var cfgFile = Resources.ConsumerConfig;
+            try
+            {
+                config = JsonConvert.DeserializeObject<Config>(cfgFile);
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from " + cfgFile + ": " + je.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -30,27 +51,39 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
         /// <returns>Indication of the success of the operation.</returns>
         public CommandResult MakePurchase(WPWithinService service)
         {
+            _service = service;
             service.SetupDevice("my-device", "an example consumer device");
 
-            ServiceMessage firstDevice = DiscoverDevices(service)?.FirstOrDefault();
-            if (firstDevice == null)
+            ServiceMessage device;
+            if (String.IsNullOrEmpty(config.producentIdForSearch))
             {
-                _error.WriteLine("No devices discovered.  Is a producer running on your network?");
+                device = DiscoverDevices(service)?.FirstOrDefault();
+            }
+            else
+            {
+                device = SearchForDevice(service, config.producentIdForSearch);
+            }
+
+            if (device == null || String.IsNullOrEmpty(device.ServerId))
+            {
+                string msg = string.Format("No devices discovered. Is a producer {0} running on your network?",
+                    String.IsNullOrEmpty(config.producentIdForSearch) ? "" : config.producentIdForSearch);
+                _error.WriteLine(msg);
                 return CommandResult.NonCriticalError;
             }
             else
             {
-                _output.WriteLine("Discovered device: {0}", firstDevice);
+                _output.WriteLine("Discovered device: {0}", device);
             }
 
             // Configure our WPWithinService as a consumer, using a dummy payment card.
-            ConnectToDevice(service, firstDevice);
+            ConnectToDevice(service, device);
 
             // Get the first service offered by the device.
             ServiceDetails firstService = GetAvailableServices(service)?.FirstOrDefault();
             if (firstService == null)
             {
-                _error.WriteLine("Couldn't find any services offered by {0}", firstDevice);
+                _error.WriteLine("Couldn't find any services offered by {0}", device);
                 return CommandResult.NonCriticalError;
             }
             else
@@ -102,6 +135,11 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             return devices;
         }
 
+        private ServiceMessage SearchForDevice(WPWithinService service, String deviceName)
+        {
+            return service.SearchForDevice(5000, deviceName);
+        }
+
 
         /// <summary>
         ///     Set ourselves up as a consumer of the specific service identified by the <paramref name="svcMsg" /> passed.  Also
@@ -112,9 +150,8 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
         /// <param name="svcMsg">A description of the service (device) offered that we want to connect to.</param>
         private void ConnectToDevice(WPWithinService service, ServiceMessage svcMsg)
         {
-            HceCard card = new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113");
             service.InitConsumer("http://", svcMsg.Hostname, svcMsg.PortNumber ?? 80, svcMsg.UrlPrefix, svcMsg.ServerId,
-                card, new PspConfig());
+                config.hceCard, config.pspConfig);
         }
 
         /// <summary>
@@ -261,6 +298,27 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             Thread.Sleep(10000);
             _output.WriteLine("Calling endServiceDelivery()");
             service.EndServiceDelivery(serviceId, token, unitsToSupply);
+        }
+
+        /// <summary>
+        /// Stops the RPC Agent through calling thrift function CloseRPCAgent(),
+        /// which simply exits the agent.
+        /// </summary>
+        internal void StopRpcClient()
+        {
+            if (_rpcManager == null)
+            {
+                _error.WriteLine("Thift RPC Agent not active.  Start it before trying to stop it.");
+                return;
+            }
+            try
+            {
+                _service?.CloseRPCAgent();
+            }
+            catch { }
+            // additionaly try to stop the agent if it's still alive
+            _rpcManager.StopThriftRpcAgentProcess();
+            _rpcManager = null;
         }
     }
 }

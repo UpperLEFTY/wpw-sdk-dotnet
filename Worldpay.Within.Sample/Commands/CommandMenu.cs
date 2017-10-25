@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Worldpay.Innovation.WPWithin.AgentManager;
-using Worldpay.Innovation.WPWithin.ThriftAdapters;
+using System.Threading;
+using Worldpay.Within.AgentManager;
+using Worldpay.Within.Sample.Properties;
+using Worldpay.Within.ThriftAdapters;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+namespace Worldpay.Within.Sample.Commands
 {
 
     /// <summary>
@@ -19,10 +22,9 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
         private readonly List<Command> _menuItems;
         private readonly TextWriter _output;
         private readonly TextReader _reader;
-        private RpcAgentManager _rpcManager;
+
         private SimpleProducer _simpleProducer;
-        private readonly RpcAgentConfiguration _defaultAgentConfig;
-        private WPWithinService _service;
+        private SimpleConsumer _simpleConsumer;
 
         public CommandMenu()
         {
@@ -30,30 +32,26 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             {
                 new Command("Exit", "Exits the application.", (a) =>
                 {
+                    try {
+                        _simpleProducer?.StopRpcClient();
+                    }
+                    catch { /* ignore */ }
                     _output.WriteLine("Exiting");
                     return CommandResult.Exit;
                 }),
-                new Command("StartRPCClient", "Starts a default Thrift RPC agent", StartRpcClient),
-                new Command("StopRPCClient", "Stops the default Thrift RPC agent", StopRpcClient),
+                //new Command("StartRPCClient", "Starts a default Thrift RPC agent", StartRpcClient),
+                //new Command("StopRPCClient", "Stops the default Thrift RPC agent", StopRpcClient),
                 new Command("StartSimpleProducer", "Starts a simple producer", StartSimpleProducer),
                 new Command("StopSimpleProducer", "Starts a simple producer", StopSimpleProducer),
                 new Command("ConsumePurchase", "Consumes a service (first price of first service found)", ConsumePurchase),
                 new Command("FindProducers", "Lists out all the producers that could be found", FindProducers),
-                new Command("ShowRpcAgentPath", "Shows where the RPC Agent has been found.", FindRpcAgent), 
+                new Command("ShowRpcAgentPath", "Shows where the RPC Agent has been found.", FindRpcAgent),
             });
 
             // TODO Parameterise these so output can be written to a specific file
             _output = Console.Out;
             _error = Console.Error;
             _reader = Console.In;
-            _defaultAgentConfig = new RpcAgentConfiguration
-            {
-                ServicePort = 9091,
-                CallbackPort = 9092,
-                LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("wpwithin.log"),
-
-            };
         }
 
         private CommandResult FindRpcAgent(string[] arg)
@@ -73,17 +71,18 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
 
         private CommandResult FindProducers(string[] arg)
         {
+            WPWithinService service = null;
             RpcAgentConfiguration consumerConfig = new RpcAgentConfiguration
             {
                 LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("WPWithinConsumer.log"),
+                LogFile = new FileInfo("rpc-within-find-producer.log"),
                 ServicePort = 9096,
             };
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
             consumerAgent.StartThriftRpcAgentProcess();
             try
             {
-                WPWithinService service = new WPWithinService(consumerConfig);
+                service = new WPWithinService(consumerConfig);
                 service.SetupDevice("Scanner", $".NET Sample Producer scanner running on ${Dns.GetHostName()}");
                 List<ServiceMessage> devices = service.DeviceDiscovery(10000).ToList();
 
@@ -96,7 +95,7 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
                     _output.WriteLine($"\tDescription: {device.DeviceDescription}, URL Prefix: {device.UrlPrefix}");
                     service.InitConsumer("http://", device.Hostname, device.PortNumber ?? 80, device.UrlPrefix,
                         device.ServerId,
-                        new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113"), 
+                        new HceCard("Bilbo", "Baggins", "Card", "5555555555554444", 11, 2018, "113"),
                         new PspConfig());
                     try
                     {
@@ -121,10 +120,14 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             }
             finally
             {
+                try
+                {
+                    service?.CloseRPCAgent();
+                }
+                catch { }
                 consumerAgent.StopThriftRpcAgentProcess();
             }
             return CommandResult.Success;
-
         }
 
         private CommandResult ConsumePurchase(string[] arg)
@@ -132,17 +135,48 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             RpcAgentConfiguration consumerConfig = new RpcAgentConfiguration
             {
                 LogLevel = "panic,fatal,error,warn,info,debug",
-                LogFile = new FileInfo("WPWithinConsumer.log"),
+                LogFile = new FileInfo("rpc-within-consumer.log"),
                 ServicePort = 9096,
             };
+
+            // overwrite configuration if defined
+            var cfgFile = Resources.ConsumerConfig;
+
+            // overwrite host and port if exists
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+                consumerConfig.ServiceHost = cfg.host;
+                consumerConfig.ServicePort = cfg.port.Value;
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from {0}: {1}", cfgFile, je.Message);
+                throw;
+            }
+
             RpcAgentManager consumerAgent = new RpcAgentManager(consumerConfig);
             consumerAgent.StartThriftRpcAgentProcess();
+            // do we need to wait a little to allow RPC Agent to start ?
+            // Thread.Sleep(250);
 
             WPWithinService service = new WPWithinService(consumerConfig);
-            SimpleConsumer consumer = new SimpleConsumer(_output, _error);
-            consumer.MakePurchase(service);
-
-            consumerAgent.StopThriftRpcAgentProcess();
+            try
+            {
+                _simpleConsumer = new SimpleConsumer(_output, _error, consumerAgent);
+                _simpleConsumer.MakePurchase(service);
+            }
+            catch
+            {
+                // rethrow, but run finally section first to stop rpc client if required
+                throw;
+            }
+            finally
+            {
+                _simpleConsumer?.StopRpcClient();
+                _simpleConsumer = null;
+            }
             return CommandResult.Success;
         }
 
@@ -153,7 +187,35 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
                 _output.WriteLine("Simple producer already started, stop it before trying to start it again.");
                 return CommandResult.NonCriticalError;
             }
-            _simpleProducer = new SimpleProducer(_output, _error, _service);
+
+            RpcAgentConfiguration rpcAgentConf = new RpcAgentConfiguration
+            {
+                ServicePort = 9091,
+                CallbackPort = 9092,
+                LogLevel = "panic,fatal,error,warn,info,debug",
+                LogFile = new FileInfo("rpc-within-producer.log"),
+            };
+
+            // overwrite configuration if defined
+            var cfgFile = Resources.ProducerConfig;
+
+            // overwrite host and port if exists
+            Config cfg;
+            try
+            {
+                cfg = JsonConvert.DeserializeObject<Config>(cfgFile);
+                rpcAgentConf.ServiceHost = cfg.host;
+                rpcAgentConf.ServicePort = cfg.port.Value;
+            }
+            catch (JsonException je)
+            {
+                _error.WriteLine("Failed to read/deserialize configuration from {0}: {1}", cfgFile, je.Message);
+            }
+
+            RpcAgentManager rpcAgentMgr = new RpcAgentManager(rpcAgentConf);
+            rpcAgentMgr.StartThriftRpcAgentProcess();
+            Thread.Sleep(750);
+            _simpleProducer = new SimpleProducer(_output, _error, new WPWithinService(rpcAgentConf), rpcAgentMgr);
             _simpleProducer.Start();
             return CommandResult.Success;
         }
@@ -170,34 +232,10 @@ namespace Worldpay.Innovation.WPWithin.Sample.Commands
             return CommandResult.Success;
         }
 
-        private CommandResult StopRpcClient(string[] arg)
+        internal void TerminateChilds()
         {
-            if (_rpcManager == null)
-            {
-                _error.WriteLine("Thift RPC Agent not active.  Start it before trying to stop it.");
-                return CommandResult.NonCriticalError;
-            }
-            _service.Dispose();
-            _service = null;
-            _rpcManager.StopThriftRpcAgentProcess();
-            _rpcManager = null;
-            return CommandResult.Success;
-        }
-
-        private CommandResult StartRpcClient(string[] arg)
-        {
-            if (_rpcManager != null)
-            {
-                _error.WriteLine("Thrift RPC Agent already active.  Stop it before trying to start a new one");
-                return CommandResult.NonCriticalError;
-            }
-            _rpcManager = new RpcAgentManager(new RpcAgentConfiguration
-            {
-                LogLevel = RpcAgentConfiguration.LogLevelAll
-            });
-            _rpcManager.StartThriftRpcAgentProcess();
-            _service = new WPWithinService(_defaultAgentConfig);
-            return CommandResult.Success;
+            _simpleConsumer?.StopRpcClient();
+            _simpleProducer?.StopRpcClient();
         }
 
         internal CommandResult ReadEvalPrint(string[] args)

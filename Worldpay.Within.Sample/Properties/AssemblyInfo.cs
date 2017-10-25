@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Worldpay.Innovation.WPWithin.Sample")]
+[assembly: AssemblyTitle("Worldpay.Within.Sample")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Worldpay.Innovation.WPWithin.Sample")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyProduct("Worldpay.Within.Sample")]
+[assembly: AssemblyCopyright("Copyright © 2016 Worldpay")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Worldpay.Innovation.WPWithin.Sample.Commands
+namespace Worldpay.Within.Sample.Commands
 {
     /// <summary>
     ///     Represents a single menu item that the user can invoke.

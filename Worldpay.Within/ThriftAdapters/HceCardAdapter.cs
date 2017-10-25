@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ThriftHceCard = Worldpay.Innovation.WPWithin.Rpc.Types.HCECard;
+﻿using Worldpay.Within;
+using ThriftHceCard = Worldpay.Within.Rpc.Types.HCECard;
 
-namespace Worldpay.Innovation.WPWithin.ThriftAdapters
+namespace Worldpay.Within.ThriftAdapters
 {
     internal class HceCardAdapter
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Worldpay.Innovation.WPWithin.Utils
+namespace Worldpay.Within.Utils
 {
     /// <summary>
     /// Convenience utility class for building good implementations of <see cref="object.GetHashCode()"/>.
