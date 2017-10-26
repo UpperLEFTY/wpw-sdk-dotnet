@@ -54,20 +54,29 @@ namespace Worldpay.Within.Sample.Commands
             _service = service;
             service.SetupDevice("my-device", "an example consumer device");
 
-            ServiceMessage device;
-            if (String.IsNullOrEmpty(config.producentIdForSearch))
+            ServiceMessage device = null;
+            if (String.IsNullOrEmpty(config.deviceNameForSearch))
             {
-                device = DiscoverDevices(service)?.FirstOrDefault();
+                
+                try
+                {
+                    device = DiscoverDevices(service)?.FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    _error.WriteLine(ex.ToString());
+                    throw;
+                }
             }
             else
             {
-                device = SearchForDevice(service, config.producentIdForSearch);
+                device = SearchForDevice(service, config.deviceNameForSearch);
             }
 
             if (device == null || String.IsNullOrEmpty(device.ServerId))
             {
                 string msg = string.Format("No devices discovered. Is a producer {0} running on your network?",
-                    String.IsNullOrEmpty(config.producentIdForSearch) ? "" : config.producentIdForSearch);
+                    String.IsNullOrEmpty(config.deviceNameForSearch) ? "" : config.deviceNameForSearch);
                 _error.WriteLine(msg);
                 return CommandResult.NonCriticalError;
             }
@@ -124,6 +133,14 @@ namespace Worldpay.Within.Sample.Commands
                     _output.WriteLine("Port: {0}", svcMsg.PortNumber);
                     _output.WriteLine("URL Prefix: {0}", svcMsg.UrlPrefix);
                     _output.WriteLine("ServerId: {0}", svcMsg.ServerId);
+                    if (svcMsg.ServiceTypes.Count > 0)
+                    {
+                        _output.WriteLine("Service Type{0}:", svcMsg.ServiceTypes.Count > 1 ? "s" : "");
+                        foreach (string srvType in svcMsg.ServiceTypes)
+                        {
+                            _output.WriteLine("  {0}", srvType);
+                        }
+                    } 
                     _output.WriteLine("--------");
                 }
             }

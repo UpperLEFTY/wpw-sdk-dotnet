@@ -31,7 +31,7 @@ namespace Worldpay.Within.Sample
         /// Id of the producent to search for.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string producentIdForSearch
+        public string deviceNameForSearch
         {
             get; set;
         }

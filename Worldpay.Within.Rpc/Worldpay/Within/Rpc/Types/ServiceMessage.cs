@@ -38,6 +38,8 @@ namespace Worldpay.Within.Rpc.Types
 
     public string DeviceName { get; set; }
 
+    public THashSet<string> ServiceTypes { get; set; }
+
     public ServiceMessage() {
     }
 
@@ -101,6 +103,23 @@ namespace Worldpay.Within.Rpc.Types
             case 7:
               if (field.Type == TType.String) {
                 DeviceName = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 8:
+              if (field.Type == TType.Set) {
+                {
+                  ServiceTypes = new THashSet<string>();
+                  TSet _set10 = iprot.ReadSetBegin();
+                  for( int _i11 = 0; _i11 < _set10.Count; ++_i11)
+                  {
+                    string _elem12;
+                    _elem12 = iprot.ReadString();
+                    ServiceTypes.Add(_elem12);
+                  }
+                  iprot.ReadSetEnd();
+                }
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
@@ -182,6 +201,21 @@ namespace Worldpay.Within.Rpc.Types
           oprot.WriteString(DeviceName);
           oprot.WriteFieldEnd();
         }
+        if (ServiceTypes != null) {
+          field.Name = "serviceTypes";
+          field.Type = TType.Set;
+          field.ID = 8;
+          oprot.WriteFieldBegin(field);
+          {
+            oprot.WriteSetBegin(new TSet(TType.String, ServiceTypes.Count));
+            foreach (string _iter13 in ServiceTypes)
+            {
+              oprot.WriteString(_iter13);
+            }
+            oprot.WriteSetEnd();
+          }
+          oprot.WriteFieldEnd();
+        }
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();
       }
@@ -235,6 +269,12 @@ namespace Worldpay.Within.Rpc.Types
         __first = false;
         __sb.Append("DeviceName: ");
         __sb.Append(DeviceName);
+      }
+      if (ServiceTypes != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("ServiceTypes: ");
+        __sb.Append(ServiceTypes);
       }
       __sb.Append(")");
       return __sb.ToString();

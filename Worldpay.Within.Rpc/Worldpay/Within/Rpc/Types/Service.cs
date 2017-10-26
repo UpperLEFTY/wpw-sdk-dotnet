@@ -30,6 +30,8 @@ namespace Worldpay.Within.Rpc.Types
 
     public string Description { get; set; }
 
+    public string ServiceType { get; set; }
+
     public Dictionary<int, Price> Prices { get; set; }
 
     public Service() {
@@ -72,6 +74,13 @@ namespace Worldpay.Within.Rpc.Types
               }
               break;
             case 4:
+              if (field.Type == TType.String) {
+                ServiceType = iprot.ReadString();
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
+            case 5:
               if (field.Type == TType.Map) {
                 {
                   Prices = new Dictionary<int, Price>();
@@ -136,10 +145,18 @@ namespace Worldpay.Within.Rpc.Types
           oprot.WriteString(Description);
           oprot.WriteFieldEnd();
         }
+        if (ServiceType != null) {
+          field.Name = "serviceType";
+          field.Type = TType.String;
+          field.ID = 4;
+          oprot.WriteFieldBegin(field);
+          oprot.WriteString(ServiceType);
+          oprot.WriteFieldEnd();
+        }
         if (Prices != null) {
           field.Name = "prices";
           field.Type = TType.Map;
-          field.ID = 4;
+          field.ID = 5;
           oprot.WriteFieldBegin(field);
           {
             oprot.WriteMapBegin(new TMap(TType.I32, TType.Struct, Prices.Count));
@@ -181,6 +198,12 @@ namespace Worldpay.Within.Rpc.Types
         __first = false;
         __sb.Append("Description: ");
         __sb.Append(Description);
+      }
+      if (ServiceType != null) {
+        if(!__first) { __sb.Append(", "); }
+        __first = false;
+        __sb.Append("ServiceType: ");
+        __sb.Append(ServiceType);
       }
       if (Prices != null) {
         if(!__first) { __sb.Append(", "); }

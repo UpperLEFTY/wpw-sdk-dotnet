@@ -13,7 +13,8 @@ namespace Worldpay.Within.ThriftAdapters
                 Description = service.Description,
                 Id = service.Id,
                 Name = service.Name,
-                Prices = CollectionUtils.Copy(service.Prices, PriceAdapter.Create)
+                Prices = CollectionUtils.Copy(service.Prices, PriceAdapter.Create),
+                ServiceType = service.ServiceType
             };
         }
 
@@ -23,7 +24,8 @@ namespace Worldpay.Within.ThriftAdapters
             {
                 Description = service.Description,
                 Name = service.Name,
-                Prices = PriceAdapter.Create(service.Prices)
+                Prices = PriceAdapter.Create(service.Prices),
+                ServiceType = service.ServiceType
             };
         }
 

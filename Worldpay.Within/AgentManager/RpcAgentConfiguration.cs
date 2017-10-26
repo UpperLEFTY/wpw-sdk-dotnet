@@ -188,9 +188,9 @@ namespace Worldpay.Within.AgentManager
                 string agentFilename = RpcAgentFilenameGenerator.GetForCurrent();
                 Log.Info("Searching for " + agentFilename);
 
-                _rpcAgentPath = LookForRpcAgentIn(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), new string[] { "iot-core-component", "bin" } )) ??
-                                LookForRpcAgentIn(GetPathFromApplicationConfig()) ??
-                                LookForRpcAgentIn(GetPathFromEnvironment());
+                _rpcAgentPath = LookForRpcAgentIn(GetPathFromEnvironment()) ??
+                                LookForRpcAgentIn(string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), new string[] { GetParentPath(3), "iot-core-component", "bin" } )) ??
+                                LookForRpcAgentIn(GetPathFromApplicationConfig());
 
                 if (_rpcAgentPath == null)
                 {
@@ -306,10 +306,9 @@ namespace Worldpay.Within.AgentManager
             {
                 return null;
             }
-            string[] path2join = new string[] { GetParentPath(3), dirToLookIn, RpcAgentFilenameGenerator.GetForCurrent() };
+            string[] path2join = new string[] { dirToLookIn, RpcAgentFilenameGenerator.GetForCurrent() };
             string path = string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), path2join);
-            FileInfo fi =
-                new FileInfo(path);
+            FileInfo fi = new FileInfo(path);
             return DoesFileExist(fi) ? fi.FullName : null;
         }
 

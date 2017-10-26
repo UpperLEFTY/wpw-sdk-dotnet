@@ -14,7 +14,16 @@ namespace Worldpay.Within.ThriftAdapters
 
         public static ServiceMessage Create(ThriftServiceMessage sm)
         {
-            return new ServiceMessage(sm.ServerId, sm.UrlPrefix, sm.PortNumber, sm.Hostname, sm.DeviceDescription);
+            HashSet<string> srvTypes;
+            if (sm.ServiceTypes == null)
+            {
+                srvTypes = new HashSet<string>();
+            }
+            else
+            {
+                srvTypes = new HashSet<string>(sm.ServiceTypes);
+            }
+            return new ServiceMessage(sm.ServerId, sm.UrlPrefix, sm.PortNumber, sm.Hostname, sm.DeviceDescription, sm.Scheme, sm.DeviceName, srvTypes);
         }
     }
 }

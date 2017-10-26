@@ -17,6 +17,8 @@ namespace Worldpay.Within
 
         public string Description { get; set; }
 
+        public string ServiceType { get; set; }
+
         public Dictionary<int, Price> Prices { get; set; }
 
         public override int GetHashCode()
@@ -31,6 +33,7 @@ namespace Worldpay.Within
                 .With(m => m.Id)
                 .With(m => m.Name)
                 .With(m => m.Description)
+                .With(m => m.ServiceType)
                 .Equals();
         }
 
@@ -40,6 +43,7 @@ namespace Worldpay.Within
                 .Append(m => m.Id)
                 .Append(m => m.Name)
                 .Append(m => m.Description)
+                .Append(m => m.ServiceType)
                 .ToString();
         }
     }
