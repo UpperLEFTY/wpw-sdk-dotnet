@@ -39,40 +39,40 @@ namespace Worldpay.Within
 
         public HashSet<string> ServiceTypes { get; }
 
-    public override bool Equals(object that)
-    {
-        return new EqualsBuilder<ServiceMessage>(this, that)
-            .With(m => m.DeviceDescription)
-            .With(m => m.Hostname)
-            .With(m => m.PortNumber)
-            .With(m => m.ServerId)
-            .With(m => m.UrlPrefix)
-            .With(m => m.Scheme)
-            .With(m => m.DeviceName)
-            .With(m => m.ServiceTypes)
-            .Equals();
-    }
+        public override bool Equals(object that)
+        {
+            return new EqualsBuilder<ServiceMessage>(this, that)
+                .With(m => m.DeviceDescription)
+                .With(m => m.Hostname)
+                .With(m => m.PortNumber)
+                .With(m => m.ServerId)
+                .With(m => m.UrlPrefix)
+                .With(m => m.Scheme)
+                .With(m => m.DeviceName)
+                .With(m => m.ServiceTypes)
+                .Equals();
+        }
 
-    public override int GetHashCode()
-    {
-        return new HashCodeBuilder<ServiceMessage>(this)
-            .With(m => m.DeviceDescription)
-            .With(m => m.Hostname)
-            .With(m => m.PortNumber)
-            .With(m => m.ServerId)
-            .With(m => m.UrlPrefix)
-            .HashCode;
-    }
+        public override int GetHashCode()
+        {
+            return new HashCodeBuilder<ServiceMessage>(this)
+                .With(m => m.DeviceDescription)
+                .With(m => m.Hostname)
+                .With(m => m.PortNumber)
+                .With(m => m.ServerId)
+                .With(m => m.UrlPrefix)
+                .HashCode;
+        }
 
-    public override string ToString()
-    {
-        return new ToStringBuilder<ServiceMessage>(this)
-            .Append(m => m.DeviceDescription)
-            .Append(m => m.Hostname)
-            .Append(m => m.PortNumber)
-            .Append(m => m.ServerId)
-            .Append(m => m.UrlPrefix)
-            .ToString();
+        public override string ToString()
+        {
+            return new ToStringBuilder<ServiceMessage>(this)
+                .Append(m => m.DeviceDescription)
+                .Append(m => m.Hostname)
+                .Append(m => m.PortNumber)
+                .Append(m => m.ServerId)
+                .Append(m => m.UrlPrefix)
+                .ToString();
+        }
     }
-}
 }
