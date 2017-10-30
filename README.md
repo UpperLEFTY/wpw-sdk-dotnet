@@ -56,7 +56,7 @@ Re-run the sample application and you should see the payments coming through on 
 
 ## So what's happening?
 
-![Sequence Diagram of basic Worldpay Within producer and consumer flow](file:///C:/Users/Andy/wpw/wpw-doc-dev/images/architecture/serviceOverview.png)
+![Sequence Diagram of basic Worldpay Within producer and consumer flow](https://wptechinnovation.github.io/worldpay-within-sdk/images/architecture/Architecture1.png)
 
 You can see there are four phases: Discover, Negotiation, Payment, and Service Delivery. For more information, see [Worldpay Within](https://wptechinnovation.github.io/worldpay-within-sdk/).
 
